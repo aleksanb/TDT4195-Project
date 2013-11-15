@@ -10,5 +10,3 @@ function colorDifference(rgb1, rgb2) {
   diff[2] *= 3 - rm;
   return Math.sqrt(diff[0] + diff[1] + diff[2]);
 }
-
-console.log(colorDifference([0,0,0], [1,1,0]))

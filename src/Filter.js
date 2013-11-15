@@ -10,11 +10,20 @@ function Filter(type,imgcache) {
     "Color shift":function(img){
       cx.putImageData(img,0,0);
       var newimg = cx.getImageData(0,0,can.width,can.height);
+      var findRgb = [144, 159, 192]; //light blue
+      var threshold = 100;
       for(var i=0;i<newimg.data.length;i+=4){
-        var tmp = newimg.data[i+2];
-        newimg.data[i+2] = newimg.data[i+1];
-        newimg.data[i+1] = newimg.data[i];
-        newimg.data[i] = tmp;
+        var rgb = [newimg.data[i], newimg.data[i+1], newimg.data[i+2]];
+
+        var colorDiff = colorDifference(rgb, findRgb);
+        var val = 0;
+        if (colorDiff <= threshold) {
+          val = 255;
+        }
+
+        newimg.data[i+2] = val;
+        newimg.data[i+1] = val;
+        newimg.data[i] = val;
       }
       return newimg;
     },
