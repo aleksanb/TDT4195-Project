@@ -1,15 +1,17 @@
 #filters {
-    margin: 10px 0 0;display:block;overflow:hidden
+    margin: 10px 0 0;
+    display:block;
+    overflow:hidden
 }
 
-span{
-    padding:0px 5px;
-    margin:2px 2px;
+span {
+    padding: 0 5px;
+    margin: 2px 2px;
     background: #222;
     color: #fff;
     border: 1px solid #222;
     border-radius: 3px;
-    font-family:sans-serif;
-    font-size:11px;
-    float:left;
+    font-family: sans-serif;
+    font-size: 11px;
+    float: left;
 }
