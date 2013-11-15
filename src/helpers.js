@@ -49,11 +49,11 @@ function getColorAt(canvas, x, y) {
   return [img.data[0], img.data[1], img.data[2]];
 }
 
-RGBtoHSV = function(color) {
+function RGBtoHSV(rgb) {
   var r, g, b, h, s, v;
-  r = color[0];
-  g = color[1];
-  b = color[2];
+  r = rgb[0];
+  g = rgb[1];
+  b = rgb[2];
   min = Math.min(r, g, b);
   max = Math.max(r, g, b);
 
@@ -81,12 +81,12 @@ RGBtoHSV = function(color) {
   return [h, s, v];
 };
 
-HSVtoRGB = function(color) {
+function HSVtoRGB(hsv) {
   var i;
   var h, s, v, r, g, b;
-  h = color[0];
-  s = color[1];
-  v = color[2];
+  h = hsv[0];
+  s = hsv[1];
+  v = hsv[2];
   if (s === 0) {
     // achromatic (grey)
     r = g = b = v;

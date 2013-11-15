@@ -1,4 +1,4 @@
-function Filter(type,imgcache) {
+function Filter(type, imgcache) {
   this.type = type;
   this.img = imgcache;
   var can = document.createElement("canvas");
@@ -6,17 +6,21 @@ function Filter(type,imgcache) {
   can.height = canvas.height;
   var cx = can.getContext("2d");
   this.apply = {
-    "Blur": function(img) {
+    "A little blur": function(img) {
+      var radius = 2;
+      return blurgen(img, radius);
+    },
+    "Medium blur": function(img) {
       var radius = 6;
       return blurgen(img, radius);
     },
-    "Find objects":function(img){
-      cx.putImageData(img,0,0);
-      var newimg = cx.getImageData(0,0,can.width,can.height);
+    "Find objects using RGB": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
 
       var threshold = 70;
       for (var i = 0; i < newimg.data.length; i += 4) {
-        var rgb = [newimg.data[i], newimg.data[i+1], newimg.data[i+2]];
+        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
 
         var minDiff = 255;
         for (var j = 0; j < cm.colors.length; j++) {
@@ -28,17 +32,17 @@ function Filter(type,imgcache) {
 
         var val = 255 * Math.max(threshold - minDiff, 0) / threshold;
 
-        newimg.data[i+2] = val;
-        newimg.data[i+1] = val;
+        newimg.data[i + 2] = val;
+        newimg.data[i + 1] = val;
         newimg.data[i] = val;
       }
       return newimg;
     },
-    "Find objects using HSV":function(img){
-      cx.putImageData(img,0,0);
-      var newimg = cx.getImageData(0,0,can.width,can.height);
+    "Find objects using HSV": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
 
-      hsvColors = [];
+      var hsvColors = [];
       for (var j = 0; j < cm.colors.length; j++) {
         var hsv = RGBtoHSV(cm.colors[j]);
         hsvColors.push(hsv);
@@ -48,7 +52,7 @@ function Filter(type,imgcache) {
       var saturationThreshold = 15;
       var valueThreshold = 20;
       for (var i = 0; i < newimg.data.length; i += 4) {
-        var rgb = [newimg.data[i], newimg.data[i+1], newimg.data[i+2]];
+        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
         var hsv = RGBtoHSV(rgb);
 
         var val = 0;
@@ -57,28 +61,57 @@ function Filter(type,imgcache) {
           if (Math.abs(hsvCompare[0] - hsv[0]) < hueThreshold
             && Math.abs(hsvCompare[1] - hsv[1]) < saturationThreshold
             && Math.abs(hsvCompare[2] - hsv[2]) < valueThreshold
-          ) {
+            ) {
             val = 255;
           }
 
         }
 
-        //var val = 255 * Math.max(threshold - minDiff, 0) / threshold;
-
-        newimg.data[i+2] = val;
-        newimg.data[i+1] = val;
+        newimg.data[i + 2] = val;
+        newimg.data[i + 1] = val;
         newimg.data[i] = val;
       }
       return newimg;
     },
-    "Threshold":function(img){
-      cx.putImageData(img,0,0);
+    "Find objects using LAB": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+
+      var labColors = [];
+      for (var j = 0; j < cm.colors.length; j++) {
+        var xyz = RGBtoXYZ(cm.colors[j]);
+        var lab = XYZtoLAB(xyz)
+        labColors.push(lab);
+      }
+
+      var threshold = 10;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
+        var xyz = RGBtoXYZ(rgb);
+        var lab = XYZtoLAB(xyz)
+
+        var val = 0;
+        for (var j = 0; j < labColors.length; j++) {
+          var labCompare = labColors[j];
+          if (deltae94(lab, labCompare) < threshold) {
+            val = 255;
+          }
+        }
+
+        newimg.data[i + 2] = val;
+        newimg.data[i + 1] = val;
+        newimg.data[i] = val;
+      }
+      return newimg;
+    },
+    "Threshold": function(img) {
+      cx.putImageData(img, 0, 0);
       var threshold = 60;
-      var newimg = cx.getImageData(0,0,can.width,can.height);
-      for(var i=0;i<newimg.data.length;i+=4){
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+      for (var i = 0; i < newimg.data.length; i += 4) {
         newimg.data[i] = newimg.data[i] > threshold ? 255 : 0;
-        newimg.data[i+1] = newimg.data[i + 1] > threshold ? 255 : 0;
-        newimg.data[i+2] = newimg.data[i + 2] > threshold ? 255 : 0;
+        newimg.data[i + 1] = newimg.data[i + 1] > threshold ? 255 : 0;
+        newimg.data[i + 2] = newimg.data[i + 2] > threshold ? 255 : 0;
       }
       return newimg;
     }
