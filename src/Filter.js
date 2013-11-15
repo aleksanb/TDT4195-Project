@@ -6,11 +6,14 @@ function Filter(type,imgcache) {
   can.height = canvas.height;
   var cx = can.getContext("2d");
   this.apply = {
-    "Blur": blurgen(2),
+    "Blur": function(img) {
+      var radius = 5;
+      stackBlurCanvasRGBA('canvas', 0, 0, canvas.width, canvas.height, radius);
+    },
     "Color shift":function(img){
       cx.putImageData(img,0,0);
       var newimg = cx.getImageData(0,0,can.width,can.height);
-      var findRgb = [144, 159, 192]; //light blue
+      var findRgb = [189, 19, 16]; //light blue
       var threshold = 100;
       for(var i=0;i<newimg.data.length;i+=4){
         var rgb = [newimg.data[i], newimg.data[i+1], newimg.data[i+2]];
@@ -126,19 +129,3 @@ function Filter(type,imgcache) {
   }[type];
 }
 
-function blurgen(factor){
-  return (function(img){
-    var can = document.createElement("canvas");
-    can.width = canvas.width;
-    can.height = canvas.height;
-    var cx = can.getContext("2d");
-    cx.save();
-    cx.putImageData(img,0,0);
-    cx.scale(1/factor,1/factor);
-    cx.drawImage(can,0,0);
-    cx.restore();
-    cx.scale(factor,factor);
-    cx.drawImage(can,0,0);
-    return cx.getImageData(0,0,can.width,can.height);
-  });
-}

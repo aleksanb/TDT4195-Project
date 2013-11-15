@@ -31,12 +31,7 @@ function FilterManager(formId,ctx){
   }
 
   this.render = function(ctx){
-    var img = !!this.filters.length?this.filters[this.filters.length-1].img:this.img;
-    /*
-     for(var i=0;i<this.filters.length;i++){
-     img = this.filters[i].apply(img);
-     }
-     */
-    ctx.putImageData(img,0,0);
+    var img = !!this.filters.length ? this.filters[this.filters.length-1].img : this.img;
+    img && ctx.putImageData(img,0,0);
   }
 }
