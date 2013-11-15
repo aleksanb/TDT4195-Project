@@ -3,6 +3,7 @@ var ctx = canvas.getContext("2d");
 var fm = new FilterManager("filters",ctx);
 var filterType = document.getElementById("filterType");
 var removeButton = document.getElementById("remove");
+var cm = new ColorManager();
 
 document.getElementById("add").addEventListener("click",function(){
   fm.add(filterType.value);
@@ -20,5 +21,6 @@ function xy(x,y, width){
 
 canvas.addEventListener("click", function(e){
   var coords = relMouseCoords(e, canvas);
-  console.log(getColor(canvas, coords.x, coords.y));
+  var rgb = getColor(canvas, coords.x, coords.y);
+  cm.addColor(rgb);
 });
