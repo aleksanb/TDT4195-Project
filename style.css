@@ -15,3 +15,7 @@ span {
     font-size: 11px;
     float: left;
 }
+
+#colors > span {
+    cursor: pointer;
+}
