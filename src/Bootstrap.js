@@ -21,6 +21,6 @@ function xy(x,y, width){
 
 canvas.addEventListener("click", function(e){
   var coords = relMouseCoords(e, canvas);
-  var rgb = getColor(canvas, coords.x, coords.y);
+  var rgb = getColorAt(canvas, coords.x, coords.y);
   cm.addColor(rgb);
 });

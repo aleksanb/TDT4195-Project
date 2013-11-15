@@ -7,7 +7,7 @@ function Filter(type,imgcache) {
   var cx = can.getContext("2d");
   this.apply = {
     "Blur": function(img) {
-      var radius = 10;
+      var radius = 6;
       return blurgen(img, radius);
     },
     "Find objects":function(img){
@@ -73,7 +73,7 @@ function Filter(type,imgcache) {
     },
     "Threshold":function(img){
       cx.putImageData(img,0,0);
-      var threshold = 20;
+      var threshold = 60;
       var newimg = cx.getImageData(0,0,can.width,can.height);
       for(var i=0;i<newimg.data.length;i+=4){
         newimg.data[i] = newimg.data[i] > threshold ? 255 : 0;

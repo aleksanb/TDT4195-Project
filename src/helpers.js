@@ -43,9 +43,9 @@ function relMouseCoords(e, canvas) {
   return {x: canvasX, y: canvasY}
 }
 
-function getColor(canvas, x, y) {
+function getColorAt(canvas, x, y) {
   var ctx = canvas.getContext("2d");
-  img = ctx.getImageData(x, y, 1, 1);
+  var img = ctx.getImageData(x, y, 1, 1);
   return [img.data[0], img.data[1], img.data[2]];
 }
 
