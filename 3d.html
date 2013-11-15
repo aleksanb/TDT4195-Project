@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<title>Display skittles</title>
+<script src='//cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js'></script>
+<script src='helvetiker_bold.js'></script>
+<body>
+<script>
+var camera, scene, renderer;
+var geometry, material, cube;
+var skittles = {
+    height: 400,
+    width: 400,
+    groups: [
+        {
+            id: 1,
+            color: 0xcc0000,
+            elements: [
+                {
+                    x: 300,
+                    y: 140,
+                },
+                {
+                    x: 200,
+                    y: 140,
+                },
+                {
+                    x: 400,
+                    y: 0
+                }
+            ]
+        },
+        {
+            id: 2,
+            color: 0xffff00,
+            elements: [
+                {
+                    x: 0,
+                    y: 0,
+                },
+                {
+                    x: 140,
+                    y: 200,
+                },
+                {
+                    x: 400,
+                    y: 400
+                }
+            ]
+        }
+    ]
+};
+
+function init(skittles) {
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = skittles.height * 2;
+    camera.position.x = skittles.width / 2;
+    camera.position.y = skittles.height / 2;
+
+    scene = new THREE.Scene();
+
+    cubes = [];
+    counts = [];
+
+    skittles.groups.forEach(function(group) {
+        group.elements.forEach(function(element) {
+            // Create sphere
+            geometry = new THREE.SphereGeometry(30, 20, 20);
+            material = new THREE.MeshLambertMaterial({ color: group.color });
+            cube = new THREE.Mesh(geometry, material);
+
+            // Position sphere
+            cube.position.x = element.x;
+            cube.position.y = element.y;
+            cube.position.z = 0;   
+
+            // Add sphere
+            cubes.push(cube);
+            scene.add(cube);
+
+            // Create number
+            var text3d = new THREE.TextGeometry( group.elements.length, {
+                size: 50,
+                height: 4,
+                font: "helvetiker",
+                weight: "bold",
+                style: "normal",
+                bevelEnabled: true,
+                bevelThickness: 5,
+                bevelSize: 1
+            });
+
+            var textMesh = new THREE.Mesh( text3d, material );
+
+            // Position number
+            textMesh.position.x = element.x;
+            textMesh.position.y = element.y;
+            textMesh.position.z = 100;
+
+            // Add number
+            cube.textMesh = textMesh;
+            counts.push(textMesh);
+            scene.add(textMesh);
+        });
+    });
+
+    var light = new THREE.PointLight(0xffffff);
+    light.position = new THREE.Vector3(0,100,400);
+    scene.add(light);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    var t = Date.now();
+
+    cubes.forEach(function(cube) {
+        p = cube.textMesh.position;
+        p.z = cube.position.z + 40 * Math.sin(t / 1000);
+        p.x = cube.position.x - 20 + 40 * Math.cos(t / 1000);
+    });
+
+    renderer.render(scene, camera);
+}
+
+init(skittles);
+animate();
+</script>
