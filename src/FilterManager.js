@@ -2,7 +2,7 @@ function FilterManager(formId,ctx){
   this.DOMfilters = document.getElementById(formId);
   this.filters = [];
   this.original = document.createElement("img");
-  this.original.src = "color.jpg";
+  this.original.src = "img/sweetsA01.png";
   var that = this;
   this.original.addEventListener("load",function(e){
     ctx.drawImage(that.original,0,0);
