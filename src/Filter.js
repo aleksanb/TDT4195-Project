@@ -34,6 +34,43 @@ function Filter(type,imgcache) {
       }
       return newimg;
     },
+    "Find objects using HSV":function(img){
+      cx.putImageData(img,0,0);
+      var newimg = cx.getImageData(0,0,can.width,can.height);
+
+      hsvColors = [];
+      for (var j = 0; j < cm.colors.length; j++) {
+        var hsv = RGBtoHSV(cm.colors[j]);
+        hsvColors.push(hsv);
+      }
+
+      var hueThreshold = 10;
+      var saturationThreshold = 15;
+      var valueThreshold = 20;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var rgb = [newimg.data[i], newimg.data[i+1], newimg.data[i+2]];
+        var hsv = RGBtoHSV(rgb);
+
+        var val = 0;
+        for (var j = 0; j < hsvColors.length; j++) {
+          var hsvCompare = hsvColors[j];
+          if (Math.abs(hsvCompare[0] - hsv[0]) < hueThreshold
+            && Math.abs(hsvCompare[1] - hsv[1]) < saturationThreshold
+            && Math.abs(hsvCompare[2] - hsv[2]) < valueThreshold
+          ) {
+            val = 255;
+          }
+
+        }
+
+        //var val = 255 * Math.max(threshold - minDiff, 0) / threshold;
+
+        newimg.data[i+2] = val;
+        newimg.data[i+1] = val;
+        newimg.data[i] = val;
+      }
+      return newimg;
+    },
     "Threshold":function(img){
       cx.putImageData(img,0,0);
       var threshold = 20;
