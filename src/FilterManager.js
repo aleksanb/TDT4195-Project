@@ -32,6 +32,6 @@ function FilterManager(formId,ctx){
 
   this.render = function(ctx){
     var img = !!this.filters.length ? this.filters[this.filters.length-1].img : this.img;
-    img && ctx.putImageData(img,0,0);
+    ctx.putImageData(img,0,0);
   }
 }
