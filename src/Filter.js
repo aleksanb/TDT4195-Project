@@ -20,7 +20,7 @@ function Filter(type,imgcache) {
 
         var minDiff = 255;
         for (var j = 0; j < cm.colors.length; j++) {
-          var diff = colorDifference(rgb, cm.colors[j]);
+          var diff = rgbDelta(rgb, cm.colors[j]);
           if (diff < minDiff) {
             minDiff = diff;
           }

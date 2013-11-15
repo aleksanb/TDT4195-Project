@@ -1,4 +1,4 @@
-function colorDifference(rgb1, rgb2) {
+function rgbDelta(rgb1, rgb2) {
   var rm = 0.5 * (rgb1[0] + rgb2[0]);
   var diff = [
     (rgb1[0] - rgb2[0]) * (rgb1[0] - rgb2[0]) * (2 + rm),
@@ -131,4 +131,95 @@ HSVtoRGB = function(color) {
       break;
   }
   return [r, g, b];
+}
+
+// a converter for converting rgb model to xyz model
+function RGBtoXYZ(rgb) {
+  var red2 = rgb[0] / 255;
+  var green2 = rgb[1] / 255;
+  var blue2 = rgb[2] / 255;
+  if (red2 > 0.04045) {
+    red2 = (red2 + 0.055) / 1.055;
+    red2 = Math.pow(red2, 2.4);
+  }
+  else {
+    red2 = red2 / 12.92;
+  }
+  if (green2 > 0.04045) {
+    green2 = (green2 + 0.055) / 1.055;
+    green2 = Math.pow(green2, 2.4);
+  }
+  else {
+    green2 = green2 / 12.92;
+  }
+  if (blue2 > 0.04045) {
+    blue2 = (blue2 + 0.055) / 1.055;
+    blue2 = Math.pow(blue2, 2.4);
+  }
+  else {
+    blue2 = blue2 / 12.92;
+  }
+  red2 = (red2 * 100);
+  green2 = (green2 * 100);
+  blue2 = (blue2 * 100);
+  var x = (red2 * 0.4124) + (green2 * 0.3576) + (blue2 * 0.1805);
+  var y = (red2 * 0.2126) + (green2 * 0.7152) + (blue2 * 0.0722);
+  var z = (red2 * 0.0193) + (green2 * 0.1192) + (blue2 * 0.9505);
+  var xyzresult = new Array();
+  xyzresult[0] = x;
+  xyzresult[1] = y;
+  xyzresult[2] = z;
+  return(xyzresult);
+}
+
+//a convertor from xyz to lab model
+function XYZtoLAB(xyz) {
+  var x = xyz[0];
+  var y = xyz[1];
+  var z = xyz[2];
+  var x2 = x / 95.047;
+  var y2 = y / 100;
+  var z2 = z / 108.883;
+  if (x2 > 0.008856) {
+    x2 = Math.pow(x2, 1 / 3);
+  }
+  else {
+    x2 = (7.787 * x2) + (16 / 116);
+  }
+  if (y2 > 0.008856) {
+    y2 = Math.pow(y2, 1 / 3);
+  }
+  else {
+    y2 = (7.787 * y2) + (16 / 116);
+  }
+  if (z2 > 0.008856) {
+    z2 = Math.pow(z2, 1 / 3);
+  }
+  else {
+    z2 = (7.787 * z2) + (16 / 116);
+  }
+  var l = 116 * y2 - 16;
+  var a = 500 * (x2 - y2);
+  var b = 200 * (y2 - z2);
+  var labresult = new Array();
+  labresult[0] = l;
+  labresult[1] = a;
+  labresult[2] = b;
+  return labresult;
+}
+
+//calculating Delta E 1994
+function deltae94(lab1, lab2) {
+  var c1 = Math.sqrt((lab1[1] * lab1[1]) + (lab1[2] * lab1[2]));
+  var c2 = Math.sqrt((lab2[1] * lab2[1]) + (lab2[2] * lab2[2]));
+  var dc = c1 - c2;
+  var dl = lab1[0] - lab2[0];
+  var da = lab1[1] - lab2[1];
+  var db = lab1[2] - lab2[2];
+  var dh = Math.sqrt((da * da) + (db * db) - (dc * dc));
+  var first = dl;
+  var second = dc / (1 + (0.045 * c1));
+  var third = dh / (1 + (0.015 * c1));
+  var deresult = Math.sqrt((first * first) + (second * second) + (third * third));
+  return deresult;
 }
