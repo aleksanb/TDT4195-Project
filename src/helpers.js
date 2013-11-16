@@ -250,6 +250,6 @@ function componentToHex(c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-function rgbToHex(r, g, b) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+function rgbToHex(rgb) {
+  return "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
 }

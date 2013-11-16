@@ -5,7 +5,7 @@ function ColorManager(type,imgcache) {
 
 ColorManager.prototype.createDOMColorNode = function(rgb) {
   var node = document.createElement("span");
-  var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+  var hex = rgbToHex(rgb);
   var humanReadable = ntc.name(hex)[1];
   node.id = this.getId(rgb);
   node.innerHTML = humanReadable;
