@@ -60,3 +60,36 @@ RegionManager.prototype.export = function() {
 
   return exports;
 }
+
+RegionManager.prototype.getColorCount = function() {
+  if (Object.keys(this.colorCount).length === 0) {
+    this.getUniqueColors();
+  }
+  return this.colorCount;
+}
+
+RegionManager.prototype.sanitizeRegions = function() {
+  var radiuses = [];
+  for (var i = 0; i < this.regions.length; i++) {
+    var region = this.regions[i];
+    var radius = region.getRadius();
+    if (radius > 2) {
+      radiuses.push(radius);
+    }
+  }
+  radiuses.sort();
+
+  var medianRadius = getMedian(radiuses);
+
+  var tempRegions = this.regions;
+
+  this.regions = [];
+
+  for (var i = 0; i < tempRegions.length; i++) {
+    var region = tempRegions[i];
+    var radius = region.getRadius();
+    if (Math.abs(1 - (radius / medianRadius)) < 0.5) {
+      this.regions.push(region);
+    }
+  }
+}

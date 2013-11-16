@@ -2,7 +2,7 @@ function FilterManager(formId, ctx) {
   this.DOMfilters = document.getElementById(formId);
   this.filters = [];
   this.original = document.createElement("img");
-  this.original.src = "img/sweetsA01.png";
+  this.original.src = "img/sweetsA02.png";
   var that = this;
   this.original.addEventListener("load", function(e) {
     canvas.width = that.original.width;
@@ -14,7 +14,10 @@ function FilterManager(formId, ctx) {
 
   this.pop = function() {
     if (this.filters.length == 0) return;
-    this.filters.pop();
+    var filter = this.filters.pop();
+    if (filter.type == "Region growing") {
+      rm.reset();
+    }
     this.DOMfilters.removeChild(this.DOMfilters.children[this.DOMfilters.children.length - 1]);
     this.render(ctx);
   }
