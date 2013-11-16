@@ -1,12 +1,12 @@
 function RegionManager() {
   this.regions = [];
-  this.colorIds = {};
+  this.colorCount = {};
   this.colors = [];
 }
 
 RegionManager.prototype.reset = function() {
   this.regions = [];
-  this.colorIds = {};
+  this.colorCount = {};
 }
 
 RegionManager.prototype.addRegion = function(pixels1D, rgb) {
@@ -24,9 +24,11 @@ RegionManager.prototype.getUniqueColors = function() {
     for (var i = 0; i < this.regions.length; i++) {
       var region = this.regions[i];
       var id = cm.getId(region.rgb);
-      if (!(id in this.colorIds)) {
-        this.colorIds[id] = true;
+      if (!(id in this.colorCount)) {
+        this.colorCount[id] = 1;
         this.colors.push(region.rgb);
+      } else {
+        this.colorCount[id]++;
       }
     }
   }

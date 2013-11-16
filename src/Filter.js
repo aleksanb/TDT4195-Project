@@ -341,6 +341,14 @@ function Filter(type, imgcache) {
         rm.addRegion(region, seedRgb);
       }
 
+      return grownImg;
+    },
+    "Mark regions": function(img) {
+      cx.putImageData(img, 0, 0);
+      var width = can.width;
+      var height = can.height;
+      var newimg = cx.getImageData(0, 0, width, height);
+
       for (var i = 0; i < rm.regions.length; i++) {
         var region = rm.regions[i];
         console.log(region.getCenter2D());
