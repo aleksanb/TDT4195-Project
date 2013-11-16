@@ -258,6 +258,81 @@ function Filter(type, imgcache) {
         }
       }
       return newimg;
+    },
+    "Region growing": function(img) {
+      cx.putImageData(img, 0, 0);
+      var width = can.width;
+      var height = can.height;
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      var grownCanvas = document.createElement("canvas");
+      grownCanvas.width = width;
+      grownCanvas.height = height;
+      var grownCtx = grownCanvas.getContext("2d");
+      grownCtx.fillStyle="black";
+      grownCtx.fillRect(0,0,width,height);
+      var grownImg = grownCtx.getImageData(0, 0, width, height);
+
+      var seeds1D = [];
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        if (newimg.data[i] || newimg.data[i + 1] || newimg.data[i + 2]) {
+          pos = to2D(i, width, height);
+          seeds1D.push(i);
+        }
+      }
+
+      var isGrown = function(pos1D) {
+        return grownImg.data[pos1D] || grownImg.data[pos1D + 1] || grownImg.data[pos1D + 2];
+      };
+
+      var getNeighbours1D = function(pos1D) {
+        var neighbours = [];
+        var pos2D = to2D(pos1D, width, height);
+        var candidate = to1D(pos2D.x - 1, pos2D.y, width);
+        if (!isGrown(candidate) && pos2D.x > 0) {
+          neighbours.push(candidate);
+        }
+        candidate = to1D(pos2D.x, pos2D.y - 1, width);
+        if (!isGrown(candidate) && pos2D.y > 0) {
+          neighbours.push(candidate);
+        }
+        candidate = to1D(pos2D.x + 1, pos2D.y, width);
+        if (!isGrown(candidate) && pos2D.x < width - 1) {
+          neighbours.push(candidate);
+        }
+        candidate = to1D(pos2D.x, pos2D.y + 1, width);
+        if (!isGrown(candidate) && pos2D.y < height - 1) {
+          neighbours.push(candidate);
+        }
+        return neighbours;
+      };
+
+      var setGrown = function(pos1D, rgb) {
+        grownImg.data[pos1D] = rgb[0];
+        grownImg.data[pos1D + 1] = rgb[1];
+        grownImg.data[pos1D + 2] = rgb[2];
+      }
+
+      for (var i = 0; i < seeds1D.length; i++) {
+        var seed1D = seeds1D[i];
+        var pos = to2D(seed1D, width, height);
+        var stack = [seed1D];
+        var seedRgb = [newimg.data[seed1D], newimg.data[seed1D + 1], newimg.data[seed1D + 2]];;
+        while (stack.length) {
+          var pos1D = stack.pop();
+          var neighbours1D = getNeighbours1D(pos1D);
+          for (var j = 0; j < neighbours1D.length; j++) {
+            var neighbour1D = neighbours1D[j];
+            var neighbourRgb = [newimg.data[neighbour1D], newimg.data[neighbour1D + 1], newimg.data[neighbour1D + 2]];
+            if (rgbDelta(seedRgb, neighbourRgb) < 100) {
+              setGrown(neighbour1D, seedRgb);
+              stack.push(neighbour1D);
+            }
+          }
+        }
+      }
+
+      return grownImg;
     }
   }[type];
 }

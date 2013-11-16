@@ -18,6 +18,7 @@ function FilterManager(formId, ctx) {
     this.DOMfilters.removeChild(this.DOMfilters.children[this.DOMfilters.children.length - 1]);
     this.render(ctx);
   }
+
   this.add = function(type) {
     var cache = !!this.filters.length ? this.filters[this.filters.length - 1].img : this.img;
     this.filters.push(new Filter(type, cache));
