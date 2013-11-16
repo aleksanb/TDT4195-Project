@@ -55,7 +55,9 @@ RegionManager.prototype.export = function() {
   });
 
   this.regions.forEach(function(elm, idx) {
-    colorObjs[rgbToHexInteger(elm.rgb)].elements.push(elm.getCenter2D());
+    var element = elm.getCenter2D();
+    element.radius = elm.getRadius();
+    colorObjs[rgbToHexInteger(elm.rgb)].elements.push(element);
   });
 
   for (var element in colorObjs) {
