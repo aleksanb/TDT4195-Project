@@ -47,9 +47,12 @@ RegionManager.prototype.sanitizeRegions = function() {
   for (var i = 0; i < this.regions.length; i++) {
     var region = this.regions[i];
     var radius = region.getRadius();
-    radiuses.push(radius);
+    if (radius > 2) {
+      radiuses.push(radius);
+    }
   }
   radiuses.sort();
+  
   var medianRadius = median(radiuses);
 
   var tempRegions = this.regions;
