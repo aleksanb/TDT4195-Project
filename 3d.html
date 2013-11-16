@@ -6,7 +6,7 @@
 <body>
 <script>
 var camera, scene, renderer;
-var geometry, material, cube;
+var shapes;
 var skittles = {
     height: 316,
     width: 600,
@@ -97,8 +97,8 @@ function init(skittles) {
     texture.needsUpdate = true;
 
     // Create background box
-    background = new THREE.PlaneGeometry(skittles.width, skittles.height);
-    backgroundMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+    var background = new THREE.PlaneGeometry(skittles.width, skittles.height);
+    var backgroundMaterial = new THREE.MeshBasicMaterial( { map: texture } );
     var boundingBox = new THREE.Mesh( background, backgroundMaterial );
 
     boundingBox.position.x = skittles.width / 2;
@@ -108,16 +108,16 @@ function init(skittles) {
 
     // Create skittles
     shapes = [];
-    counts = [];
 
     skittles.groups.forEach(function(group, index) {
         group.elements.forEach(function(element) {
+            var MAGIC_NUMBER = 20;
             // Create sphere
             var geometry = {
-                0: new THREE.CubeGeometry(20, 20, 20),
-                1: new THREE.SphereGeometry(20, 20, 20),
-                2: new THREE.OctahedronGeometry(20, 0),
-                3: new THREE.TeapotGeometry(20)
+                0: new THREE.CubeGeometry(MAGIC_NUMBER, MAGIC_NUMBER, MAGIC_NUMBER),
+                1: new THREE.SphereGeometry(MAGIC_NUMBER, MAGIC_NUMBER, MAGIC_NUMBER),
+                2: new THREE.OctahedronGeometry(MAGIC_NUMBER, 0),
+                3: new THREE.TeapotGeometry(MAGIC_NUMBER)
             }[index % 4];
 
             material = new THREE.MeshLambertMaterial({ color: group.color });
@@ -126,15 +126,15 @@ function init(skittles) {
             // Position sphere
             cube.position.x = element.x;
             cube.position.y = element.y;
-            //cube.position.z = cube.geometry.radius * 1;
+            cube.position.z = MAGIC_NUMBER;
 
             // Add sphere
             shapes.push(cube);
             scene.add(cube);
 
             // Create number
-            /*var text3d = new THREE.TextGeometry( group.elements.length, {
-                size: 20,
+            var text3d = new THREE.TextGeometry( group.elements.length, {
+                size: MAGIC_NUMBER,
                 height: 4,
                 font: "helvetiker",
                 weight: "bold",
@@ -148,13 +148,12 @@ function init(skittles) {
 
             // Position number
             textMesh.position.x = element.x;
-            textMesh.position.y = element.y + cube.geometry.radius * 1.1;
-            textMesh.position.z = cube.geometry.radius;
+            textMesh.position.y = element.y + MAGIC_NUMBER * 1.1;
+            textMesh.position.z = MAGIC_NUMBER * 1.5;
 
             // Add number
             cube.textMesh = textMesh;
-            counts.push(textMesh);
-            scene.add(textMesh);*/
+            scene.add(textMesh);
         });
     });
 
@@ -175,7 +174,8 @@ function animate() {
         shapes[i].rotation.y = offset * Math.pow(-1, i);
         shapes[i].rotation.x = offset * Math.pow(-1, i);
         shapes[i].rotation.z = offset * Math.pow(-1, i);
-        //shapes[i].textMesh.rotation.y = offset;
+
+        shapes[i].textMesh.rotation.y = offset;
     }
 
     camera.position.x = skittles.width / 2 + 40 * Math.sin(t / 1000);
