@@ -23,6 +23,10 @@ function FilterManager(formId, ctx) {
   }
 
   this.add = function(type) {
+    if ((type == "Mark region centers" || type == "Sanitize regions")&& rm.regions.length === 0) {
+      alert("You haven't calculated any regions yet");
+      return;
+    }
     var cache = !!this.filters.length ? this.filters[this.filters.length - 1].img : this.img;
     this.filters.push(new Filter(type, cache));
     this.filters[this.filters.length - 1].img = this.filters[this.filters.length - 1].apply(cache);

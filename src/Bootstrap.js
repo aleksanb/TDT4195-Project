@@ -59,7 +59,6 @@ go3dButton.addEventListener("click", function(){
     return;
   }
 
-  console.log("GO!")
   rm.export();
   window.location = "3d.html";
 });
