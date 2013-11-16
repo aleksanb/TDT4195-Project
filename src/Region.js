@@ -23,7 +23,7 @@ Region.prototype.getCenter2D = function() {
 }
 
 Region.prototype.getNumberOfRegionsWithThisColor = function() {
-  return rm.colorCount[this.colorId];
+  return rm.getColorCount()[this.colorId];
 }
 
 Region.prototype.getRadius = function() {

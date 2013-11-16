@@ -34,3 +34,10 @@ RegionManager.prototype.getUniqueColors = function() {
   }
   return this.colors;
 }
+
+RegionManager.prototype.getColorCount = function() {
+  if (Object.keys(this.colorCount).length === 0) {
+    this.getUniqueColors();
+  }
+  return this.colorCount;
+}
