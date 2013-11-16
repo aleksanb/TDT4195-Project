@@ -90,17 +90,22 @@ function Filter(type, imgcache) {
         var xyz = RGBtoXYZ(rgb);
         var lab = XYZtoLAB(xyz)
 
-        var val = 0;
+        var minDelta = 255;
+        var resultRgb = [0, 0, 0];
         for (var j = 0; j < labColors.length; j++) {
           var labCompare = labColors[j];
-          if (deltae94(lab, labCompare) < threshold) {
-            val = 255;
+          var delta = deltae94(lab, labCompare);
+          if (delta < threshold) {
+            if (delta < minDelta) {
+              minDelta = delta;
+              resultRgb = cm.colors[j];
+            }
           }
         }
 
-        newimg.data[i + 2] = val;
-        newimg.data[i + 1] = val;
-        newimg.data[i] = val;
+        newimg.data[i] = resultRgb[0];
+        newimg.data[i + 1] = resultRgb[1];
+        newimg.data[i + 2] = resultRgb[2];
       }
       return newimg;
     },
