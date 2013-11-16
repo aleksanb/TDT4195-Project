@@ -184,18 +184,18 @@ function Filter(type, imgcache) {
         if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
           var factor = 1;
           erosionBox:
-          for (var boxY = 0; boxY < boxDimension; boxY++) {
-            for (var boxX = 0; boxX < boxDimension; boxX++) {
-              var xPos = pos.x + boxX + offset;
-              var yPos = pos.y + boxY + offset;
-              var iPos = to1D(xPos, yPos, width);
-              var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
-              if (structuringElement[boxY][boxX] && !rgbSum) {
-                factor = 0;
-                break erosionBox;
+            for (var boxY = 0; boxY < boxDimension; boxY++) {
+              for (var boxX = 0; boxX < boxDimension; boxX++) {
+                var xPos = pos.x + boxX + offset;
+                var yPos = pos.y + boxY + offset;
+                var iPos = to1D(xPos, yPos, width);
+                var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
+                if (structuringElement[boxY][boxX] && !rgbSum) {
+                  factor = 0;
+                  break erosionBox;
+                }
               }
             }
-          }
           newimg.data[i] = factor * newimg.data[i];
           newimg.data[i + 1] = factor * newimg.data[i + 1];
           newimg.data[i + 2] = factor * newimg.data[i + 2];
@@ -236,18 +236,18 @@ function Filter(type, imgcache) {
         if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
           var resultColor = [0, 0, 0];
           dilationBox:
-          for (var boxY = 0; boxY < boxDimension; boxY++) {
-            for (var boxX = 0; boxX < boxDimension; boxX++) {
-              var xPos = pos.x + boxX + offset;
-              var yPos = pos.y + boxY + offset;
-              var iPos = to1D(xPos, yPos, width);
-              var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
-              if (structuringElement[boxY][boxX] && rgbSum > 0) {
-                resultColor = [tempImg.data[iPos], tempImg.data[iPos + 1], tempImg.data[iPos + 2]];
-                break dilationBox;
+            for (var boxY = 0; boxY < boxDimension; boxY++) {
+              for (var boxX = 0; boxX < boxDimension; boxX++) {
+                var xPos = pos.x + boxX + offset;
+                var yPos = pos.y + boxY + offset;
+                var iPos = to1D(xPos, yPos, width);
+                var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
+                if (structuringElement[boxY][boxX] && rgbSum > 0) {
+                  resultColor = [tempImg.data[iPos], tempImg.data[iPos + 1], tempImg.data[iPos + 2]];
+                  break dilationBox;
+                }
               }
             }
-          }
           newimg.data[i] = resultColor[0];
           newimg.data[i + 1] = resultColor[1];
           newimg.data[i + 2] = resultColor[2];
@@ -269,8 +269,8 @@ function Filter(type, imgcache) {
       grownCanvas.width = width;
       grownCanvas.height = height;
       var grownCtx = grownCanvas.getContext("2d");
-      grownCtx.fillStyle="black";
-      grownCtx.fillRect(0,0,width,height);
+      grownCtx.fillStyle = "black";
+      grownCtx.fillRect(0, 0, width, height);
       var grownImg = grownCtx.getImageData(0, 0, width, height);
 
       var seeds1D = [];
@@ -317,7 +317,7 @@ function Filter(type, imgcache) {
 
       for (var i = 0; i < seeds1D.length; i++) {
         var seed1D = seeds1D[i];
-        var seedRgb = [newimg.data[seed1D], newimg.data[seed1D + 1], newimg.data[seed1D + 2]];;
+        var seedRgb = [newimg.data[seed1D], newimg.data[seed1D + 1], newimg.data[seed1D + 2]];
         var region = null;
         if (!isGrown(seed1D)) {
           region = [seed1D];
@@ -343,20 +343,29 @@ function Filter(type, imgcache) {
 
       return grownImg;
     },
-    "Mark regions": function(img) {
-      cx.putImageData(img, 0, 0);
+    "Sanitize regions": function(img) {
+      rm.sanitizeRegions();
+
       var width = can.width;
       var height = can.height;
+      cx.fillStyle = "black";
+      cx.fillRect(0, 0, width, height);
       var newimg = cx.getImageData(0, 0, width, height);
 
       for (var i = 0; i < rm.regions.length; i++) {
         var region = rm.regions[i];
-        console.log(region.getCenter2D());
+        //var center = region.getCenter2D();
+        var rgb = region.rgb;
+        for (var j = 0; j < region.pixels2D.length; j++) {
+          var pos2D = region.pixels2D[j];
+          var pos1D = to1D(pos2D.x, pos2D.y, width);
+          newimg.data[pos1D] = rgb[0];
+          newimg.data[pos1D + 1] = rgb[1];
+          newimg.data[pos1D + 2] = rgb[2];
+        }
       }
 
-      console.log(rm.getUniqueColors());
-
-      return grownImg;
+      return newimg;
     }
   }[type];
 }
