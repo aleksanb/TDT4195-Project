@@ -4,6 +4,7 @@ var ctx = canvas.getContext("2d");
 var fm = new FilterManager("filters",ctx);
 var filterType = document.getElementById("filterType");
 var removeButton = document.getElementById("remove");
+var go3dButton = document.getElementById("go3d");
 var cm = new ColorManager();
 var rm = new RegionManager();
 
@@ -15,6 +16,11 @@ document.getElementById("add").addEventListener("click",function(){
 removeButton.addEventListener("click",function(){
   fm.pop();
   removeButton.disabled = !fm.filters.length;
+});
+
+go3dButton.addEventListener("click", function(){
+  rm.export();
+  window.location = "3d.html";
 });
 
 function xy(x,y, width){

@@ -23,3 +23,7 @@ span {
 #canvas {
     cursor: crosshair;
 }
+
+.clear {
+    clear: both;
+}
