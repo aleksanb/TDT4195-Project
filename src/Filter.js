@@ -341,7 +341,10 @@ function Filter(type, imgcache) {
         rm.addRegion(region, seedRgb);
       }
 
-      console.log(rm.regions);
+      for (var i = 0; i < rm.regions.length; i++) {
+        var region = rm.regions[i];
+        console.log(region.getCenter2D());
+      }
 
       return grownImg;
     }
