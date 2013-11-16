@@ -96,7 +96,8 @@ RegionManager.prototype.getMedianRadius = function() {
     for (var i = 0; i < this.regions.length; i++) {
       var region = this.regions[i];
       var radius = region.getRadius();
-      if (radius > 2) {
+      var numPixels = region.pixels2D.length;
+      if (radius > 2 && numPixels > 12) { //suppress really small areas
         radiuses.push(radius);
       }
     }
