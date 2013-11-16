@@ -258,3 +258,9 @@ function rgbToHexInteger(rgb) {
   var tmp = "0x" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
   return parseInt(tmp, 16);
 }
+
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) == 0;
+  };
+}
