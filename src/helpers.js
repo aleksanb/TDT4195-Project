@@ -223,3 +223,15 @@ function deltae94(lab1, lab2) {
   var deresult = Math.sqrt((first * first) + (second * second) + (third * third));
   return deresult;
 }
+
+function to1D(x, y, width) {
+  return (y * width + x) * 4;
+}
+
+function to2D(i, width, height) {
+  var n = i / 4;
+  return {
+    x: n % width,
+    y: parseInt(n / width)
+  };
+}
