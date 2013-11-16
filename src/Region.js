@@ -3,6 +3,7 @@ function Region(pixels2D, rgb) {
   this.pixels2D = pixels2D;
   this.center2D = null;
   this.colorId = cm.getId(this.rgb);
+  this.radius = null;
 }
 
 Region.prototype.getCenter2D = function() {
@@ -27,28 +28,30 @@ Region.prototype.getNumberOfRegionsWithThisColor = function() {
 }
 
 Region.prototype.getRadius = function() {
-  var minX = this.pixels2D[0].x;
-  var maxX = minX;
-  var minY = this.pixels2D[0].y;
-  var maxY = minY;
-  for (var i = 1; i < this.pixels2D.length; i++) {
-    var pixel = this.pixels2D[i];
-    if (pixel.x < minX) {
-      minX = pixel.x;
+  if (null == this.radius) {
+    var minX = this.pixels2D[0].x;
+    var maxX = minX;
+    var minY = this.pixels2D[0].y;
+    var maxY = minY;
+    for (var i = 1; i < this.pixels2D.length; i++) {
+      var pixel = this.pixels2D[i];
+      if (pixel.x < minX) {
+        minX = pixel.x;
+      }
+      if (pixel.x > maxX) {
+        maxX = pixel.x;
+      }
+      if (pixel.y < minY) {
+        minY = pixel.y;
+      }
+      if (pixel.y > maxY) {
+        maxY = pixel.y;
+      }
     }
-    if (pixel.x > maxX) {
-      maxX = pixel.x;
-    }
-    if (pixel.y < minY) {
-      minY = pixel.y;
-    }
-    if (pixel.y > maxY) {
-      maxY = pixel.y;
-    }
+    var widthDiff = maxX - minX;
+    var heightDiff = maxY - minY;
+    var averageDiff = (widthDiff + heightDiff) / 2;
+    this.radius = averageDiff / 2;
   }
-  var widthDiff = maxX - minX;
-  var heightDiff = maxY - minY;
-  var averageDiff = (widthDiff + heightDiff) / 2;
-  var radius = averageDiff / 2;
-  return radius;
+  return this.radius;
 }

@@ -235,3 +235,12 @@ function to2D(i, width, height) {
     y: parseInt(n / width)
   };
 }
+
+function median(numberArray) {
+  var middleIndex = parseInt(numberArray.length / 2);
+  if (numberArray.length % 2 == 0) {
+    return (numberArray[middleIndex] + numberArray[middleIndex - 1]) / 2;
+  } else {
+    return numberArray[middleIndex];
+  }
+}

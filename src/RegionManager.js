@@ -41,3 +41,27 @@ RegionManager.prototype.getColorCount = function() {
   }
   return this.colorCount;
 }
+
+RegionManager.prototype.sanitizeRegions = function() {
+  var radiuses = [];
+  for (var i = 0; i < this.regions.length; i++) {
+    var region = this.regions[i];
+    var radius = region.getRadius();
+    radiuses.push(radius);
+  }
+  radiuses.sort();
+  var medianRadius = median(radiuses);
+
+  var tempRegions = this.regions;
+
+  this.regions = [];
+
+  for (var i = 0; i < tempRegions.length; i++) {
+    var region = tempRegions[i];
+    var radius = region.getRadius();
+    if (Math.abs(1 - (radius / medianRadius)) < 0.5) {
+      this.regions.push(region);
+    }
+  }
+}
+
