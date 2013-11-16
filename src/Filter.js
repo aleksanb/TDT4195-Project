@@ -155,7 +155,7 @@ function Filter(type, imgcache) {
       }
       return newimg;
     },
-    "Erosion (BW)": function(img) {
+    "Erosion": function(img) {
       cx.putImageData(img, 0, 0);
       var width = can.width;
       var height = can.height;
@@ -168,36 +168,93 @@ function Filter(type, imgcache) {
       tempCtx.putImageData(img, 0, 0);
       var tempImg = tempCtx.getImageData(0, 0, width, height);
 
-      var boxDimension = 3;
-      var offset = -parseInt(boxDimension / 2);
-      var minX = Math.abs(offset);
-      var minY = Math.abs(offset);
-      var maxX = width + offset;
-      var maxY = height + offset;
       var structuringElement = [
         [false, true, false],
         [true, true, true],
         [false, true, false]
       ];
+      var boxDimension = structuringElement.length;
+      var offset = -parseInt(boxDimension / 2);
+      var minX = Math.abs(offset);
+      var minY = Math.abs(offset);
+      var maxX = width + offset - 1;
+      var maxY = height + offset - 1;
       for (var i = 0; i < newimg.data.length; i += 4) {
         var pos = to2D(i, width, height);
         if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
-          var val = 255;
-          box:
+          var factor = 1;
+          erosionBox:
           for (var boxY = 0; boxY < boxDimension; boxY++) {
             for (var boxX = 0; boxX < boxDimension; boxX++) {
               var xPos = pos.x + boxX + offset;
               var yPos = pos.y + boxY + offset;
               var iPos = to1D(xPos, yPos, width);
-              if (structuringElement[boxY][boxX] && tempImg.data[iPos] < 100) {
-                val = 0;
-                break box;
+              var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
+              if (structuringElement[boxY][boxX] && !rgbSum) {
+                factor = 0;
+                break erosionBox;
               }
             }
           }
-          newimg.data[i] = val;
-          newimg.data[i + 1] = val;
-          newimg.data[i + 2] = val;
+          newimg.data[i] = factor * newimg.data[i];
+          newimg.data[i + 1] = factor * newimg.data[i + 1];
+          newimg.data[i + 2] = factor * newimg.data[i + 2];
+        } else {
+          newimg.data[i] = 0;
+          newimg.data[i + 1] = 0;
+          newimg.data[i + 2] = 0;
+        }
+      }
+      return newimg;
+    },
+    "Dilation": function(img) {
+      cx.putImageData(img, 0, 0);
+      var width = can.width;
+      var height = can.height;
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      var tempCan = document.createElement("canvas");
+      tempCan.width = width;
+      tempCan.height = height;
+      var tempCtx = tempCan.getContext("2d");
+      tempCtx.putImageData(img, 0, 0);
+      var tempImg = tempCtx.getImageData(0, 0, width, height);
+
+      var structuringElement = [
+        [false, true, false],
+        [true, true, true],
+        [false, true, false]
+      ];
+      var boxDimension = structuringElement.length;
+      var offset = -parseInt(boxDimension / 2);
+      var minX = Math.abs(offset);
+      var minY = Math.abs(offset);
+      var maxX = width + offset - 1;
+      var maxY = height + offset - 1;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var pos = to2D(i, width, height);
+        if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+          var resultColor = [0, 0, 0];
+          dilationBox:
+          for (var boxY = 0; boxY < boxDimension; boxY++) {
+            for (var boxX = 0; boxX < boxDimension; boxX++) {
+              var xPos = pos.x + boxX + offset;
+              var yPos = pos.y + boxY + offset;
+              var iPos = to1D(xPos, yPos, width);
+              var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
+              if (structuringElement[boxY][boxX] && rgbSum > 0) {
+                resultColor = [tempImg.data[iPos], tempImg.data[iPos + 1], tempImg.data[iPos + 2]];
+                break dilationBox;
+              }
+            }
+          }
+          newimg.data[i] = resultColor[0];
+          newimg.data[i + 1] = resultColor[1];
+          newimg.data[i + 2] = resultColor[2];
+        } else {
+          newimg.data[i] = 0;
+          newimg.data[i + 1] = 0;
+          newimg.data[i + 2] = 0;
         }
       }
       return newimg;
