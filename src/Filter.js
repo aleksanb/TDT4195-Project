@@ -149,6 +149,53 @@ function Filter(type, imgcache) {
         }
       }
       return newimg;
+    },
+    "Erosion (BW)": function(img) {
+      cx.putImageData(img, 0, 0);
+      var width = can.width;
+      var height = can.height;
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      var tempCan = document.createElement("canvas");
+      tempCan.width = width;
+      tempCan.height = height;
+      var tempCtx = tempCan.getContext("2d");
+      tempCtx.putImageData(img, 0, 0);
+      var tempImg = tempCtx.getImageData(0, 0, width, height);
+
+      var boxDimension = 3;
+      var offset = -parseInt(boxDimension / 2);
+      var minX = Math.abs(offset);
+      var minY = Math.abs(offset);
+      var maxX = width + offset;
+      var maxY = height + offset;
+      var structuringElement = [
+        [false, true, false],
+        [true, true, true],
+        [false, true, false]
+      ];
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var pos = to2D(i, width, height);
+        if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+          var val = 255;
+          box:
+          for (var boxY = 0; boxY < boxDimension; boxY++) {
+            for (var boxX = 0; boxX < boxDimension; boxX++) {
+              var xPos = pos.x + boxX + offset;
+              var yPos = pos.y + boxY + offset;
+              var iPos = to1D(xPos, yPos, width);
+              if (structuringElement[boxY][boxX] && tempImg.data[iPos] < 100) {
+                val = 0;
+                break box;
+              }
+            }
+          }
+          newimg.data[i] = val;
+          newimg.data[i + 1] = val;
+          newimg.data[i + 2] = val;
+        }
+      }
+      return newimg;
     }
   }[type];
 }
