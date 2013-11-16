@@ -2,11 +2,14 @@ function RegionManager() {
   this.regions = [];
   this.colorCount = {};
   this.colors = [];
+  this.medianRadius = null;
 }
 
 RegionManager.prototype.reset = function() {
   this.regions = [];
   this.colorCount = {};
+  this.colors = [];
+  this.medianRadius = null;
 }
 
 RegionManager.prototype.addRegion = function(pixels1D, rgb) {
@@ -43,17 +46,7 @@ RegionManager.prototype.getColorCount = function() {
 }
 
 RegionManager.prototype.sanitizeRegions = function() {
-  var radiuses = [];
-  for (var i = 0; i < this.regions.length; i++) {
-    var region = this.regions[i];
-    var radius = region.getRadius();
-    if (radius > 2) {
-      radiuses.push(radius);
-    }
-  }
-  radiuses.sort();
-
-  var medianRadius = getMedian(radiuses);
+  var medianRadius = this.getMedianRadius();
 
   var tempRegions = this.regions;
 
@@ -68,3 +61,18 @@ RegionManager.prototype.sanitizeRegions = function() {
   }
 }
 
+RegionManager.prototype.getMedianRadius = function() {
+  if (null == this.medianRadius) {
+    var radiuses = [];
+    for (var i = 0; i < this.regions.length; i++) {
+      var region = this.regions[i];
+      var radius = region.getRadius();
+      if (radius > 2) {
+        radiuses.push(radius);
+      }
+    }
+    radiuses.sort();
+    this.medianRadius = getMedian(radiuses);
+  }
+  return this.medianRadius;
+}
