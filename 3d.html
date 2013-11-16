@@ -184,7 +184,7 @@ function animate() {
 }
 
 var mayhaps = $.jStorage.get('skittles');
-if (typeof mayhaps != 'undefined') {
+if (mayhaps === null) {
     skittles = mayhaps;
 }
 
