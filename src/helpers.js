@@ -236,7 +236,7 @@ function to2D(i, width, height) {
   };
 }
 
-function median(numberArray) {
+function getMedian(numberArray) {
   var middleIndex = parseInt(numberArray.length / 2);
   if (numberArray.length % 2 == 0) {
     return (numberArray[middleIndex] + numberArray[middleIndex - 1]) / 2;

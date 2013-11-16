@@ -52,8 +52,8 @@ RegionManager.prototype.sanitizeRegions = function() {
     }
   }
   radiuses.sort();
-  
-  var medianRadius = median(radiuses);
+
+  var medianRadius = getMedian(radiuses);
 
   var tempRegions = this.regions;
 

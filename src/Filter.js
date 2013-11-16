@@ -127,7 +127,6 @@ function Filter(type, imgcache) {
       var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
       var boxDimension = 3;
-      var middle = parseInt(boxDimension * boxDimension / 2);
       var offset = -parseInt(boxDimension / 2);
       var minX = Math.abs(offset);
       var minY = Math.abs(offset);
@@ -147,7 +146,7 @@ function Filter(type, imgcache) {
             }
           }
           valuesInBox.sort();
-          var median = valuesInBox[middle];
+          var median = getMedian(valuesInBox);
           newimg.data[i] = median;
           newimg.data[i + 1] = median;
           newimg.data[i + 2] = median;
