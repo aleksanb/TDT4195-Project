@@ -313,24 +313,35 @@ function Filter(type, imgcache) {
         grownImg.data[pos1D + 2] = rgb[2];
       }
 
+      rm.reset();
+
       for (var i = 0; i < seeds1D.length; i++) {
         var seed1D = seeds1D[i];
-        var pos = to2D(seed1D, width, height);
-        var stack = [seed1D];
         var seedRgb = [newimg.data[seed1D], newimg.data[seed1D + 1], newimg.data[seed1D + 2]];;
+        var region = null;
+        if (!isGrown(seed1D)) {
+          region = [seed1D];
+          setGrown(seed1D, seedRgb);
+        }
+        var stack = [seed1D];
         while (stack.length) {
           var pos1D = stack.pop();
           var neighbours1D = getNeighbours1D(pos1D);
           for (var j = 0; j < neighbours1D.length; j++) {
             var neighbour1D = neighbours1D[j];
             var neighbourRgb = [newimg.data[neighbour1D], newimg.data[neighbour1D + 1], newimg.data[neighbour1D + 2]];
-            if (rgbDelta(seedRgb, neighbourRgb) < 100) {
+            if (rgbDelta(seedRgb, neighbourRgb) < 10) {
               setGrown(neighbour1D, seedRgb);
+              region && region.push(neighbour1D);
               stack.push(neighbour1D);
             }
           }
         }
+
+        rm.addRegion(region);
       }
+
+      console.log(rm.regions);
 
       return grownImg;
     }

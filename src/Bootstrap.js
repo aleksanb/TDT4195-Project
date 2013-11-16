@@ -4,6 +4,7 @@ var fm = new FilterManager("filters",ctx);
 var filterType = document.getElementById("filterType");
 var removeButton = document.getElementById("remove");
 var cm = new ColorManager();
+var rm = new RegionManager();
 
 document.getElementById("add").addEventListener("click",function(){
   fm.add(filterType.value);

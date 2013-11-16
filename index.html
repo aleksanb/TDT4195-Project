@@ -8,6 +8,7 @@
 </head>
 <body>
     <select id="filterType">
+        <option>Region growing</option>
         <option>Find objects using RGB</option>
         <option>Find objects using HSV</option>
         <option>Find objects using LAB</option>
@@ -17,7 +18,6 @@
         <option>Median filter (greyscale)</option>
         <option>Erosion</option>
         <option>Dilation</option>
-        <option>Region growing</option>
     </select>
 
     <button id="add">Apply</button>
@@ -33,6 +33,7 @@
 
     <script src="src/FilterManager.js"></script>
     <script src="src/ColorManager.js"></script>
+    <script src="src/RegionManager.js"></script>
     <script src="src/Filter.js"></script>
     <script src="src/Bootstrap.js"></script>
     <script src="src/helpers.js"></script>
