@@ -253,3 +253,8 @@ function componentToHex(c) {
 function rgbToHex(rgb) {
   return "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
 }
+
+function rgbToHexInteger(rgb) {
+  var tmp = "0x" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+  return parseInt(tmp, 16);
+}

@@ -14,7 +14,7 @@ var skittles = {
     width: 600,
     groups: [
         {
-            color: [20, 100, 100],
+            color: 12077332,
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -27,7 +27,7 @@ var skittles = {
             ]
         },
         {
-            color: [0, 0, 255],
+            color: 12077332,
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -36,7 +36,7 @@ var skittles = {
             ]
         },
         {
-            color: [255, 255, 0],
+            color: 12077332,
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -49,7 +49,7 @@ var skittles = {
             ]
         },
         {
-            color: [255, 0, 0],
+            color: 12077332,
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -118,12 +118,12 @@ function init(skittles) {
                 3: new THREE.TeapotGeometry(MAGIC_NUMBER)
             }[index % 4];
 
-            material = new THREE.MeshLambertMaterial({ color: new THREE.Color().setRGB(group.color[0], group.color[1], group.color[2]) });
+            material = new THREE.MeshLambertMaterial({ color: group.color });
             cube = new THREE.Mesh(geometry, material);
 
             // Position sphere
             cube.position.x = element.x;
-            cube.position.y = element.y;
+            cube.position.y = skittles.height -element.y;
             cube.position.z = MAGIC_NUMBER;
 
             // Add sphere
@@ -132,7 +132,7 @@ function init(skittles) {
 
             // Create number
             var text3d = new THREE.TextGeometry( group.elements.length, {
-                size: MAGIC_NUMBER,
+                size: MAGIC_NUMBER * 0.8,
                 height: 4,
                 font: "helvetiker",
                 weight: "bold",
@@ -146,8 +146,8 @@ function init(skittles) {
 
             // Position number
             textMesh.position.x = element.x;
-            textMesh.position.y = element.y + MAGIC_NUMBER * 1.1;
-            textMesh.position.z = MAGIC_NUMBER * 1.5;
+            textMesh.position.y = skittles.height - element.y + MAGIC_NUMBER * 0.8;
+            textMesh.position.z = MAGIC_NUMBER;
 
             // Add number
             cube.textMesh = textMesh;

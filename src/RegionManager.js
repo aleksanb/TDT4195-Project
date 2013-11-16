@@ -40,7 +40,7 @@ RegionManager.prototype.getUniqueColors = function() {
 
 RegionManager.prototype.export = function() {
   var exports = {
-    image: filePath,
+    filePath: filePath,
     height: canvas.height,
     width: canvas.width,
     groups: []
@@ -48,14 +48,14 @@ RegionManager.prototype.export = function() {
 
   var colorObjs = {};
   this.getUniqueColors().forEach(function(elm, idx) {
-    colorObjs[elm] = {
-      color: elm,
+    colorObjs[rgbToHexInteger(elm)] = {
+      color: rgbToHexInteger(elm),
       elements: []
     }
   });
 
   this.regions.forEach(function(elm, idx) {
-    colorObjs[elm.rgb].elements.push(elm.getCenter2D());
+    colorObjs[rgbToHexInteger(elm.rgb)].elements.push(elm.getCenter2D());
   });
 
   for (var element in colorObjs) {
