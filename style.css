@@ -1,7 +1,7 @@
 #filters {
     margin: 10px 0 0;
-    display:block;
-    overflow:hidden
+    display: block;
+    overflow: hidden
 }
 
 span {
@@ -18,4 +18,8 @@ span {
 
 #colors > span {
     cursor: pointer;
+}
+
+#canvas {
+    cursor: crosshair;
 }
