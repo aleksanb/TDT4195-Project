@@ -12,7 +12,7 @@ var skittles = {
     width: 600,
     groups: [
         {
-            color: 0xcc0000,
+            color: [20, 100, 100],
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -25,7 +25,16 @@ var skittles = {
             ]
         },
         {
-            color: 0xffff00,
+            color: [0, 0, 255],
+            elements: [
+                {
+                    y: 316 * Math.random(),
+                    x: 600 * Math.random()
+                }
+            ]
+        },
+        {
+            color: [255, 255, 0],
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -38,20 +47,7 @@ var skittles = {
             ]
         },
         {
-            color: 0x0000cc,
-            elements: [
-                {
-                    y: 316 * Math.random(),
-                    x: 600 * Math.random()
-                },
-                {
-                    y: 316 * Math.random(),
-                    x: 600 * Math.random()
-                }
-            ]
-        },
-        {
-            color: 0x0c00cc,
+            color: [255, 0, 0],
             elements: [
                 {
                     y: 316 * Math.random(),
@@ -120,7 +116,7 @@ function init(skittles) {
                 3: new THREE.TeapotGeometry(MAGIC_NUMBER)
             }[index % 4];
 
-            material = new THREE.MeshLambertMaterial({ color: group.color });
+            material = new THREE.MeshLambertMaterial({ color: new THREE.Color().setRGB(group.color[0], group.color[1], group.color[2]) });
             cube = new THREE.Mesh(geometry, material);
 
             // Position sphere
