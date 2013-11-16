@@ -354,7 +354,6 @@ function Filter(type, imgcache) {
 
       for (var i = 0; i < rm.regions.length; i++) {
         var region = rm.regions[i];
-        //var center = region.getCenter2D();
         var rgb = region.rgb;
         for (var j = 0; j < region.pixels2D.length; j++) {
           var pos2D = region.pixels2D[j];
@@ -365,6 +364,22 @@ function Filter(type, imgcache) {
         }
       }
 
+      return newimg;
+    },
+    "Mark region centers": function(img) {
+      cx.putImageData(img, 0, 0);
+      cx.fillStyle = "white";
+
+      for (var i = 0; i < rm.regions.length; i++) {
+        var region = rm.regions[i];
+        var center = region.getCenter2D();
+        var radius = region.getRadius();
+        cx.fillRect(center.x - radius / 2, center.y - radius / 2, radius, radius);
+      }
+
+      var width = can.width;
+      var height = can.height;
+      var newimg = cx.getImageData(0, 0, width, height);
       return newimg;
     }
   }[type];

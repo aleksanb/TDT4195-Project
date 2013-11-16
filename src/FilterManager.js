@@ -14,7 +14,10 @@ function FilterManager(formId, ctx) {
 
   this.pop = function() {
     if (this.filters.length == 0) return;
-    this.filters.pop();
+    var filter = this.filters.pop();
+    if (filter.type == "Region growing") {
+      rm.reset();
+    }
     this.DOMfilters.removeChild(this.DOMfilters.children[this.DOMfilters.children.length - 1]);
     this.render(ctx);
   }
