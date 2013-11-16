@@ -338,7 +338,7 @@ function Filter(type, imgcache) {
           }
         }
 
-        rm.addRegion(region);
+        rm.addRegion(region, seedRgb);
       }
 
       console.log(rm.regions);
