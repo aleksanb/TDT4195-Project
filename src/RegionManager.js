@@ -34,3 +34,29 @@ RegionManager.prototype.getUniqueColors = function() {
   }
   return this.colors;
 }
+
+RegionManager.prototype.export = function() {
+  var exports = {
+    height: canvas.height,
+    width: canvas.width,
+    groups: []
+  }
+
+  var colorObjs = {};
+  this.getUniqueColors().forEach(function(elm, idx) {
+    colorObjs[elm] = {
+      color: elm,
+      elements: []
+    }
+  });
+
+  this.regions.forEach(function(elm, idx) {
+    colorObjs[elm.rgb].elements.push(elm.getCenter2D());
+  });
+
+  for (var element in colorObjs) {
+    exports.groups.push(colorObjs[element]);
+  }
+
+  return exports;
+}
