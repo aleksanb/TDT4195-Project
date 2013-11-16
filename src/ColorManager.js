@@ -5,10 +5,12 @@ function ColorManager(type,imgcache) {
 
 ColorManager.prototype.createDOMColorNode = function(rgb) {
   var node = document.createElement("span");
-  var rgbString = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
+  var hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+  var humanReadable = ntc.name(hex)[1];
   node.id = this.getId(rgb);
-  node.innerHTML = rgbString;
-  node.style.backgroundColor = rgbString;
+  node.innerHTML = humanReadable;
+  node.style.backgroundColor = hex;
+  node.title = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
 
   var that = this;
   node.addEventListener("click", function(e) {

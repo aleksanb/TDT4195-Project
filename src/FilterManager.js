@@ -2,7 +2,7 @@ function FilterManager(formId, ctx) {
   this.DOMfilters = document.getElementById(formId);
   this.filters = [];
   this.original = document.createElement("img");
-  this.original.src = fileName;
+  this.original.src = filePath;
   var that = this;
   this.original.addEventListener("load", function(e) {
     canvas.width = that.original.width;
