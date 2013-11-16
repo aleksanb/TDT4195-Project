@@ -3,11 +3,13 @@
 <script src='//cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js'></script>
 <script src='helvetiker_bold.js'></script>
 <script src='lib/uclass_TeapotGeometry.js'></script>
+<script src='lib/jstorage.js'></script>
 <body>
 <script>
 var camera, scene, renderer;
 var shapes;
 var skittles = {
+    filePath: 'img/sweetsA01.png',
     height: 316,
     width: 600,
     groups: [
@@ -181,6 +183,11 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-backgroundImage = loadImage('img/sweetsA01.png');
+var mayhaps = $.jStorage.get('skittles');
+if (typeof mayhaps != 'undefined') {
+    skittles = mayhaps;
+}
+
+backgroundImage = loadImage(skittles.filePath);
 
 </script>

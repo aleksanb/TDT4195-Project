@@ -40,6 +40,7 @@ RegionManager.prototype.getUniqueColors = function() {
 
 RegionManager.prototype.export = function() {
   var exports = {
+    image: filePath,
     height: canvas.height,
     width: canvas.width,
     groups: []
@@ -60,6 +61,8 @@ RegionManager.prototype.export = function() {
   for (var element in colorObjs) {
     exports.groups.push(colorObjs[element]);
   }
+
+  $.jStorage.set('skittles', exports);
 
   return exports;
 }
@@ -100,5 +103,7 @@ RegionManager.prototype.getMedianRadius = function() {
     radiuses.sort();
     this.medianRadius = getMedian(radiuses);
   }
+
+  localStorage
   return this.medianRadius;
 }
