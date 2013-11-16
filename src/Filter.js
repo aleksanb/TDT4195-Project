@@ -346,6 +346,8 @@ function Filter(type, imgcache) {
         console.log(region.getCenter2D());
       }
 
+      console.log(rm.getUniqueColors());
+
       return grownImg;
     }
   }[type];

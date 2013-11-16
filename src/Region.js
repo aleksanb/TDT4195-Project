@@ -20,3 +20,7 @@ Region.prototype.getCenter2D = function() {
   }
   return this.center2D;
 }
+
+Region.prototype.getColorId = function() {
+  return cm.getId(this.rgb);
+}
