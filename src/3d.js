@@ -121,10 +121,10 @@ function init(skittles) {
       shape.position.z = MAGIC_NUMBER;
 
       if (index % 4 === 1) {
-        shape.scale.y = 0.6;  //shape sphere like an ovoid
+        shape.scale.y = 0.6;  //"flat" sphere
       }
 
-      // Add sphere
+      // Add shape
       shapes.push(shape);
       scene.add(shape);
 
@@ -141,7 +141,7 @@ function init(skittles) {
       });
       var textMesh = new THREE.Mesh(text3d, material);
 
-      // Position number
+      // Position number with offset correction
       var offsetX = 0.4 * MAGIC_NUMBER * group.elements.length.toString().length;
       var pivot = new THREE.Object3D();
       pivot.position.x = element.x;
@@ -161,6 +161,7 @@ function init(skittles) {
   light.position = new THREE.Vector3(0, 100, 400);
   scene.add(light);
 
+  //Remove H1 that says Loading...
   var loadingElement = document.getElementById("loading");
   document.body.removeChild(loadingElement);
 
