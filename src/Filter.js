@@ -5,6 +5,8 @@ function Filter(type, imgcache) {
   can.width = canvas.width;
   can.height = canvas.height;
   var cx = can.getContext("2d");
+  var width = can.width;
+  var height = can.height;
   this.apply = {
     "A little blur": function(img) {
       var radius = 2;
@@ -123,8 +125,6 @@ function Filter(type, imgcache) {
     },
     "Median filter (greyscale)": function(img) {
       cx.putImageData(img, 0, 0);
-      var width = can.width;
-      var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
       var boxDimension = 3;
       var offset = -parseInt(boxDimension / 2);
@@ -156,8 +156,6 @@ function Filter(type, imgcache) {
     },
     "Erosion": function(img) {
       cx.putImageData(img, 0, 0);
-      var width = can.width;
-      var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
 
       var tempCan = document.createElement("canvas");
@@ -208,8 +206,6 @@ function Filter(type, imgcache) {
     },
     "Dilation": function(img) {
       cx.putImageData(img, 0, 0);
-      var width = can.width;
-      var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
 
       var tempCan = document.createElement("canvas");
@@ -260,8 +256,6 @@ function Filter(type, imgcache) {
     },
     "Region growing": function(img) {
       cx.putImageData(img, 0, 0);
-      var width = can.width;
-      var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
 
       var grownCanvas = document.createElement("canvas");
@@ -345,8 +339,6 @@ function Filter(type, imgcache) {
     "Sanitize regions": function(img) {
       rm.sanitizeRegions();
 
-      var width = can.width;
-      var height = can.height;
       cx.fillStyle = "black";
       cx.fillRect(0, 0, width, height);
       var newimg = cx.getImageData(0, 0, width, height);
@@ -376,10 +368,55 @@ function Filter(type, imgcache) {
         cx.fillRect(center.x - radius / 2, center.y - radius / 2, radius, radius);
       }
 
-      var width = can.width;
-      var height = can.height;
       var newimg = cx.getImageData(0, 0, width, height);
       return newimg;
+    },
+    "FFT low pass filter": function(img) {
+      var fftWidth = __getNextPowerOfTwo(width);
+      var fftHeight = __getNextPowerOfTwo(height);
+
+      var fftCanvas = document.createElement("canvas");
+      fftCanvas.width = fftWidth;
+      fftCanvas.height = fftHeight;
+      fftCanvas.id = 'fftCan';
+      //fftCanvas.style.display = 'none';
+      var fftCtx = fftCanvas.getContext("2d");
+      fftCtx.fillStyle = "white";
+      fftCtx.fillRect(0, 0, fftWidth, fftHeight);
+      fftCtx.putImageData(img, 0, 0);
+
+      document.body.appendChild(fftCanvas);
+
+      var fftData = FFT('fftCan');
+
+      cx.save();
+      cx.rect(0, 0, fftWidth, fftHeight);
+      var filterRadius = 0.5 * width;
+      var grd = cx.createRadialGradient(fftWidth / 2, fftHeight / 2, 0, fftWidth / 2, fftHeight / 2, filterRadius);
+      grd.addColorStop(0, '#FFFFFF');
+      grd.addColorStop(1, '#000000');
+      cx.fillStyle = grd;
+      cx.fill();
+      cx.restore();
+      var filter = cx.getImageData(0, 0, width, height);
+
+      for (var i = 0; i < filter.data.length; i += 4) {
+        var filterVal = (filter.data[i]) / 255;
+        fftData.real[i] *= filterVal;
+        fftData.real[i + 1] *= filterVal;
+        fftData.real[i + 2] *= filterVal;
+        fftData.real[i + 3] *= filterVal;
+
+        fftData.imag[i] *= filterVal;
+        fftData.imag[i + 1] *= filterVal;
+        fftData.imag[i + 2] *= filterVal;
+        fftData.imag[i + 3] *= filterVal;
+      }
+
+      IFFT(fftData, 'fftCan');
+      var filtered = fftCtx.getImageData(0, 0, width, height);
+      document.body.removeChild(fftCanvas);
+      return filtered;
     }
   }[type];
 }
