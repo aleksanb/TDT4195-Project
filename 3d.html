@@ -5,8 +5,9 @@
 <script src='lib/uclass_TeapotGeometry.js'></script>
 <script src='lib/jstorage.js'></script>
 <script src="lib/OrbitControls.js"></script>
+<script src="lib/Detector.js"></script>
 <style>
-    body{
+    body {
         margin: 0;
         overflow: hidden;
     }
@@ -81,7 +82,7 @@ function loadImage(path) {
 }
 
 function init(skittles) {
-    renderer = new THREE.WebGLRenderer();
+    renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
