@@ -1,4 +1,4 @@
-function ColorManager(type,imgcache) {
+function ColorManager(type, imgcache) {
   this.colors = [];
   this.DOMcolors = document.getElementById('colors');
 }

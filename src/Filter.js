@@ -63,7 +63,7 @@ function Filter(type, imgcache) {
             && Math.abs(hsvCompare[1] - hsv[1]) < saturationThreshold
             && Math.abs(hsvCompare[2] - hsv[2]) < valueThreshold
             ) {
-              resultRgb = cm.colors[j];
+            resultRgb = cm.colors[j];
           }
         }
 
