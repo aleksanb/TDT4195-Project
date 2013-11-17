@@ -29,29 +29,50 @@ Region.prototype.getNumberOfRegionsWithThisColor = function() {
 
 Region.prototype.getRadius = function() {
   if (null == this.radius) {
-    var minX = this.pixels2D[0].x;
-    var maxX = minX;
-    var minY = this.pixels2D[0].y;
-    var maxY = minY;
-    for (var i = 1; i < this.pixels2D.length; i++) {
-      var pixel = this.pixels2D[i];
-      if (pixel.x < minX) {
-        minX = pixel.x;
-      }
-      if (pixel.x > maxX) {
-        maxX = pixel.x;
-      }
-      if (pixel.y < minY) {
-        minY = pixel.y;
-      }
-      if (pixel.y > maxY) {
-        maxY = pixel.y;
-      }
-    }
-    var widthDiff = maxX - minX;
-    var heightDiff = maxY - minY;
-    var averageDiff = (widthDiff + heightDiff) / 2;
+    var dimensions = this.getDimensions();
+    var averageDiff = (dimensions.width + dimensions.height) / 2;
     this.radius = averageDiff / 2;
   }
   return this.radius;
+}
+
+Region.prototype.getDimensions = function() {
+  var minX = this.pixels2D[0].x;
+  var maxX = minX;
+  var minY = this.pixels2D[0].y;
+  var maxY = minY;
+  for (var i = 1; i < this.pixels2D.length; i++) {
+    var pixel = this.pixels2D[i];
+    if (pixel.x < minX) {
+      minX = pixel.x;
+    }
+    if (pixel.x > maxX) {
+      maxX = pixel.x;
+    }
+    if (pixel.y < minY) {
+      minY = pixel.y;
+    }
+    if (pixel.y > maxY) {
+      maxY = pixel.y;
+    }
+  }
+  this.width = maxX - minX;
+  this.height = maxY - minY;
+  return {
+    width: this.width,
+    height: this.height
+  };
+}
+
+Region.prototype.getWidth = function() {
+  if (null === this.width) {
+    this.getDimensions();
+  }
+  return this.width;
+}
+Region.prototype.getHeight = function() {
+  if (null === this.height) {
+    this.getDimensions();
+  }
+  return this.height;
 }

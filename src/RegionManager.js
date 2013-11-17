@@ -3,6 +3,7 @@ function RegionManager() {
   this.colorCount = {};
   this.colors = [];
   this.medianRadius = null;
+  this.averagePixelCount = null;
 }
 
 RegionManager.prototype.reset = function() {
@@ -10,6 +11,7 @@ RegionManager.prototype.reset = function() {
   this.colorCount = {};
   this.colors = [];
   this.medianRadius = null;
+  this.averagePixelCount = null;
 }
 
 RegionManager.prototype.addRegion = function(pixels1D, rgb) {
@@ -78,7 +80,7 @@ RegionManager.prototype.getColorCount = function() {
 
 RegionManager.prototype.sanitizeRegions = function() {
   var medianRadius = this.getMedianRadius();
-
+  var averagePixelCount = this.getAveragePixelCount();
   var tempRegions = this.regions;
 
   this.regions = [];
@@ -86,7 +88,13 @@ RegionManager.prototype.sanitizeRegions = function() {
   for (var i = 0; i < tempRegions.length; i++) {
     var region = tempRegions[i];
     var radius = region.getRadius();
-    if (Math.abs(1 - (radius / medianRadius)) < 0.5) {
+    var numPixels = region.pixels2D.length;
+    var relativeSize = radius / medianRadius;
+    var relativeWidth = region.getWidth() / region.getHeight();
+    var relativePixelCount = numPixels / averagePixelCount;
+    if (relativeSize > 0.5 && relativeSize < 2
+      && relativeWidth > 0.7 && relativeWidth < 1.5
+      && relativePixelCount > 0.4 && relativePixelCount < 5) {
       this.regions.push(region);
     }
   }
@@ -107,6 +115,24 @@ RegionManager.prototype.getMedianRadius = function() {
     this.medianRadius = getMedian(radiuses);
   }
 
-  localStorage
   return this.medianRadius;
+}
+
+RegionManager.prototype.getAveragePixelCount = function() {
+  if (null == this.averagePixelCount) {
+    var pixels = 0;
+    var ignoredRegions = 0;
+    for (var i = 0; i < this.regions.length; i++) {
+      var region = this.regions[i];
+      var numPixels = region.pixels2D.length;
+      if (numPixels > 12) { //ignore really small areas that are probably noise
+        pixels += numPixels;
+      } else {
+        ignoredRegions++;
+      }
+    }
+    this.averagePixelCount = pixels / (this.regions.length - ignoredRegions);
+  }
+
+  return this.averagePixelCount;
 }

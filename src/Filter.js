@@ -56,20 +56,20 @@ function Filter(type, imgcache) {
         var hsv = RGBtoHSV(rgb);
 
         var val = 0;
+        var resultRgb = [0, 0, 0];
         for (var j = 0; j < hsvColors.length; j++) {
           var hsvCompare = hsvColors[j];
           if (Math.abs(hsvCompare[0] - hsv[0]) < hueThreshold
             && Math.abs(hsvCompare[1] - hsv[1]) < saturationThreshold
             && Math.abs(hsvCompare[2] - hsv[2]) < valueThreshold
             ) {
-            val = 255;
+              resultRgb = cm.colors[j];
           }
-
         }
 
-        newimg.data[i + 2] = val;
-        newimg.data[i + 1] = val;
-        newimg.data[i] = val;
+        newimg.data[i] = resultRgb[0];
+        newimg.data[i + 1] = resultRgb[1];
+        newimg.data[i + 2] = resultRgb[2];
       }
       return newimg;
     },
@@ -329,7 +329,7 @@ function Filter(type, imgcache) {
           for (var j = 0; j < neighbours1D.length; j++) {
             var neighbour1D = neighbours1D[j];
             var neighbourRgb = [newimg.data[neighbour1D], newimg.data[neighbour1D + 1], newimg.data[neighbour1D + 2]];
-            if (rgbDelta(seedRgb, neighbourRgb) < 10) {
+            if (rgbDelta(seedRgb, neighbourRgb) < 3) {
               setGrown(neighbour1D, seedRgb);
               region && region.push(neighbour1D);
               stack.push(neighbour1D);
