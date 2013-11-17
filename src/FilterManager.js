@@ -26,6 +26,11 @@ function FilterManager(formId, ctx) {
     if ((type == "Mark region centers" || type == "Sanitize regions")&& rm.regions.length === 0) {
       alert("You haven't calculated any regions yet");
       return;
+    } else if (type.startsWith("Find objects")) {
+      if (cm.colors.length === 0) {
+        alert("You should mark at least one color by clicking the image");
+        return;
+      }
     }
     var cache = !!this.filters.length ? this.filters[this.filters.length - 1].img : this.img;
     this.filters.push(new Filter(type, cache));
