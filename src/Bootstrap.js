@@ -24,15 +24,12 @@ function go3D() {
   }
 
   var foundObjects = false;
-  var regionsGrown = false;
   var regionsSanitized = false;
   for (var i = 0; i < fm.filters.length; i++) {
     var filter = fm.filters[i];
     var type = filter.type;
     if (type.startsWith("Find objects")) {
       foundObjects = true;
-    } else if (type === "Region growing") {
-      regionsGrown = true;
     } else if (type == "Sanitize regions") {
       regionsSanitized = true;
     }
@@ -40,11 +37,6 @@ function go3D() {
 
   if (!foundObjects) {
     fm.add("Find objects using LAB");
-    return go3D();
-  }
-
-  if (!regionsGrown) {
-    fm.add("Region growing");
     return go3D();
   }
 

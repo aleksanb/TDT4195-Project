@@ -254,7 +254,7 @@ function Filter(type, imgcache) {
       }
       return newimg;
     },
-    "Region growing": function(img) {
+    "Sanitize regions": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, width, height);
 
@@ -334,14 +334,10 @@ function Filter(type, imgcache) {
         rm.addRegion(region, seedRgb);
       }
 
-      return grownImg;
-    },
-    "Sanitize regions": function(img) {
       rm.sanitizeRegions();
 
-      cx.fillStyle = "black";
-      cx.fillRect(0, 0, width, height);
-      var newimg = cx.getImageData(0, 0, width, height);
+      grownCtx.fillRect(0, 0, width, height);
+      var newimg = grownCtx.getImageData(0, 0, width, height);
 
       for (var i = 0; i < rm.regions.length; i++) {
         var region = rm.regions[i];

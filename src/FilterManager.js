@@ -15,7 +15,7 @@ function FilterManager(formId, ctx) {
   this.pop = function() {
     if (this.filters.length == 0) return;
     var filter = this.filters.pop();
-    if (filter.type == "Region growing") {
+    if (filter.type == "Sanitize regions") {
       rm.reset();
     }
     this.DOMfilters.removeChild(this.DOMfilters.children[this.DOMfilters.children.length - 1]);
@@ -23,7 +23,7 @@ function FilterManager(formId, ctx) {
   }
 
   this.add = function(type) {
-    if ((type == "Mark region centers" || type == "Sanitize regions") && rm.regions.length === 0) {
+    if ((type == "Mark region centers") && rm.regions.length === 0) {
       alert("You haven't calculated any regions yet");
       return;
     } else if (type.startsWith("Find objects")) {
