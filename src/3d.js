@@ -70,14 +70,14 @@ function init(skittles) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 1, 1000);
   camera.position.z = skittles.height * 1;
   camera.position.x = skittles.width / 2;
   camera.position.y = skittles.height / 2;
 
   scene = new THREE.Scene();
 
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
 
   // Add background image
   var canvas = document.createElement('canvas');
@@ -90,8 +90,8 @@ function init(skittles) {
 
   // Create background box
   var background = new THREE.PlaneGeometry(skittles.width, skittles.height);
-  var backgroundMaterial = new THREE.MeshBasicMaterial( { map: texture } );
-  var boundingBox = new THREE.Mesh( background, backgroundMaterial );
+  var backgroundMaterial = new THREE.MeshBasicMaterial({ map: texture });
+  var boundingBox = new THREE.Mesh(background, backgroundMaterial);
 
   boundingBox.position.x = skittles.width / 2;
   boundingBox.position.y = skittles.height / 2;
@@ -106,51 +106,59 @@ function init(skittles) {
       var MAGIC_NUMBER = element.radius;
       // Create sphere
       var geometry = {
-        0: new THREE.CubeGeometry(MAGIC_NUMBER / 0.71, MAGIC_NUMBER / 0.71, MAGIC_NUMBER / 0.71),
-        1: new THREE.SphereGeometry(MAGIC_NUMBER * 0.9, MAGIC_NUMBER * 0.9, MAGIC_NUMBER * 0.9),
+        0: new THREE.CubeGeometry(MAGIC_NUMBER, MAGIC_NUMBER, MAGIC_NUMBER),
+        1: new THREE.SphereGeometry(MAGIC_NUMBER * 0.9, 10, 10),
         2: new THREE.OctahedronGeometry(MAGIC_NUMBER, 0),
-        3: new THREE.TeapotGeometry(MAGIC_NUMBER * 0.9)
+        3: new THREE.TeapotGeometry(MAGIC_NUMBER * 0.666)
       }[index % 4];
 
       material = new THREE.MeshLambertMaterial({ color: group.color });
-      cube = new THREE.Mesh(geometry, material);
+      shape = new THREE.Mesh(geometry, material);
 
       // Position sphere
-      cube.position.x = element.x;
-      cube.position.y = skittles.height -element.y;
-      cube.position.z = MAGIC_NUMBER;
+      shape.position.x = element.x;
+      shape.position.y = skittles.height - element.y;
+      shape.position.z = MAGIC_NUMBER;
+
+      if (index % 4 === 1) {
+        shape.scale.y = 0.6;  //shape sphere like an ovoid
+      }
 
       // Add sphere
-      shapes.push(cube);
-      scene.add(cube);
+      shapes.push(shape);
+      scene.add(shape);
 
       // Create number
-      var text3d = new THREE.TextGeometry( group.elements.length, {
-        size: MAGIC_NUMBER,
+      var text3d = new THREE.TextGeometry(group.elements.length, {
+        size: MAGIC_NUMBER * 0.9,
         height: 4,
         font: "helvetiker",
         weight: "bold",
         style: "normal",
         bevelEnabled: true,
-        bevelThickness: 3,
+        bevelThickness: MAGIC_NUMBER * 0.2,
         bevelSize: 1
       });
-
-      var textMesh = new THREE.Mesh( text3d, material );
+      var textMesh = new THREE.Mesh(text3d, material);
 
       // Position number
-      textMesh.position.x = element.x;
-      textMesh.position.y = skittles.height - element.y + MAGIC_NUMBER * 1.7;
-      textMesh.position.z = MAGIC_NUMBER;
+      var offsetX = 0.4 * MAGIC_NUMBER * group.elements.length.toString().length;
+      var pivot = new THREE.Object3D();
+      pivot.position.x = element.x;
+      pivot.position.y = skittles.height - element.y + MAGIC_NUMBER;
+      pivot.position.z = MAGIC_NUMBER;
+      textMesh.position.x -= offsetX;
+      textMesh.position.z -= 2;
+      pivot.add(textMesh);
 
       // Add number
-      cube.textMesh = textMesh;
-      scene.add(textMesh);
+      shape.textMesh = pivot;
+      scene.add(pivot);
     });
   });
 
   var light = new THREE.PointLight(0xffffff);
-  light.position = new THREE.Vector3(0,100,400);
+  light.position = new THREE.Vector3(0, 100, 400);
   scene.add(light);
 
   var loadingElement = document.getElementById("loading");
@@ -164,7 +172,7 @@ function animate() {
 
   var t = Date.now();
 
-  for (var i=0; i<shapes.length; i++) {
+  for (var i = 0; i < shapes.length; i++) {
     var offset = Math.sin(i * 10) + t / 1000;
     shapes[i].rotation.y = offset * Math.pow(-1, i);
     shapes[i].rotation.x = offset * Math.pow(-1, i);
