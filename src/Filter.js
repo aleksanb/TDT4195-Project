@@ -23,18 +23,18 @@ function Filter(type, imgcache) {
         var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
 
         var minDiff = 255;
+        var resultRgb = [0, 0, 0];
         for (var j = 0; j < cm.colors.length; j++) {
           var diff = rgbDelta(rgb, cm.colors[j]);
-          if (diff < minDiff) {
+          if (diff <= threshold && diff < minDiff) {
             minDiff = diff;
+            resultRgb = cm.colors[j];
           }
         }
 
-        var val = 255 * Math.max(threshold - minDiff, 0) / threshold;
-
-        newimg.data[i + 2] = val;
-        newimg.data[i + 1] = val;
-        newimg.data[i] = val;
+        newimg.data[i] = resultRgb[0];
+        newimg.data[i + 1] = resultRgb[1];
+        newimg.data[i + 2] = resultRgb[2];
       }
       return newimg;
     },
