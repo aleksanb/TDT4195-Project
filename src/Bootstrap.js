@@ -1,10 +1,9 @@
-var filePath = "img/sweetsA02.png";
+var filePath = "img/sweetsA01.png";
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var fm = new FilterManager("filters", ctx);
 var filterType = document.getElementById("filterType");
 var removeButton = document.getElementById("remove");
-var go3dButton = document.getElementById("go3d");
 var cm = new ColorManager();
 var rm = new RegionManager();
 
@@ -18,7 +17,7 @@ removeButton.addEventListener("click", function() {
   removeButton.disabled = !fm.filters.length;
 });
 
-go3dButton.addEventListener("click", function() {
+document.getElementById("go3d").addEventListener("click", function() {
   if (cm.colors.length === 0) {
     alert("You should mark at least one color by clicking the image");
     return;

@@ -379,7 +379,7 @@ function Filter(type, imgcache) {
       fftCanvas.width = fftWidth;
       fftCanvas.height = fftHeight;
       fftCanvas.id = 'fftCan';
-      //fftCanvas.style.display = 'none';
+      fftCanvas.style.display = 'none';
       var fftCtx = fftCanvas.getContext("2d");
       fftCtx.fillStyle = "white";
       fftCtx.fillRect(0, 0, fftWidth, fftHeight);
@@ -389,9 +389,19 @@ function Filter(type, imgcache) {
 
       var fftData = FFT('fftCan');
 
+      can.width = fftWidth;
+      can.height = fftHeight;
       cx.save();
       cx.rect(0, 0, fftWidth, fftHeight);
-      var filterRadius = 0.5 * width;
+      if (fftHeight > fftWidth) {
+        cx.translate(0, -fftHeight / 2);
+        cx.scale(1, fftHeight / fftWidth);
+      } else {
+        cx.translate(-fftWidth / 2, 0);
+        cx.scale(fftWidth / fftHeight, 1);
+      }
+      var minDimension = Math.min(fftWidth, fftHeight);
+      var filterRadius = 0.4 * minDimension;
       var grd = cx.createRadialGradient(fftWidth / 2, fftHeight / 2, 0, fftWidth / 2, fftHeight / 2, filterRadius);
       grd.addColorStop(0, '#FFFFFF');
       grd.addColorStop(1, '#000000');
