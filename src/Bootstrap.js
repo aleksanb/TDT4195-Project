@@ -17,10 +17,10 @@ removeButton.addEventListener("click", function() {
   removeButton.disabled = !fm.filters.length;
 });
 
-document.getElementById("go3d").addEventListener("click", function() {
+function go3D() {
   if (cm.colors.length === 0) {
     alert("You should mark at least one color by clicking the image");
-    return;
+    return false;
   }
 
   var foundObjects = false;
@@ -29,7 +29,6 @@ document.getElementById("go3d").addEventListener("click", function() {
   for (var i = 0; i < fm.filters.length; i++) {
     var filter = fm.filters[i];
     var type = filter.type;
-    console.log(type);
     if (type.startsWith("Find objects")) {
       foundObjects = true;
     } else if (type === "Region growing") {
@@ -39,34 +38,25 @@ document.getElementById("go3d").addEventListener("click", function() {
     }
   }
 
-  var that = this;
   if (!foundObjects) {
     fm.add("Find objects using LAB");
-    setTimeout(function() {
-      that.click();
-    }, 1);
-    return;
+    return go3D();
   }
 
   if (!regionsGrown) {
     fm.add("Region growing");
-    setTimeout(function() {
-      that.click();
-    }, 1);
-    return;
+    return go3D();
   }
 
   if (!regionsSanitized) {
     fm.add("Sanitize regions");
-    setTimeout(function() {
-      that.click();
-    }, 1);
-    return;
+    return go3D();
   }
+  removeButton.disabled = !fm.filters.length;
 
   rm.export();
-  window.location = "3d.html";
-});
+  return true;
+}
 
 canvas.addEventListener("click", function(e) {
   var coords = relMouseCoords(e, canvas);

@@ -93,7 +93,7 @@ RegionManager.prototype.sanitizeRegions = function() {
     var relativeWidth = region.getWidth() / region.getHeight();
     var relativePixelCount = numPixels / averagePixelCount;
     if (relativeSize > 0.5 && relativeSize < 2
-      && relativeWidth > 0.7 && relativeWidth < 1.5
+      && relativeWidth > 0.7 && relativeWidth < 1.9
       && relativePixelCount > 0.4 && relativePixelCount < 5) {
       this.regions.push(region);
     }

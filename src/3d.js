@@ -132,7 +132,7 @@ function init(skittles) {
         weight: "bold",
         style: "normal",
         bevelEnabled: true,
-        bevelThickness: 5,
+        bevelThickness: 3,
         bevelSize: 1
       });
 
