@@ -41,7 +41,7 @@ RegionManager.prototype.getUniqueColors = function() {
 }
 
 RegionManager.prototype.export = function() {
-  var exports = {
+  exports = {
     filePath: filePath,
     height: canvas.height,
     width: canvas.width,
@@ -66,7 +66,7 @@ RegionManager.prototype.export = function() {
     exports.groups.push(colorObjs[element]);
   }
 
-  $.jStorage.set('skittles', exports);
+  //$.jStorage.set('skittles', exports);
 
   return exports;
 }

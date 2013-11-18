@@ -24,6 +24,10 @@ removeButton.addEventListener("click", function() {
   removeButton.disabled = !fm.filters.length;
 });
 
+document.getElementById("go3d").addEventListener("click", function() {
+  go3D();
+});
+
 function go3D() {
   if (cm.colors.length === 0) {
     alert("You should mark at least one color by clicking the image");
@@ -54,7 +58,8 @@ function go3D() {
   removeButton.disabled = !fm.filters.length;
 
   rm.export();
-  return true;
+  $("#threedee").show();
+  setup3DScene();
 }
 
 canvas.addEventListener("click", function(e) {
@@ -62,3 +67,19 @@ canvas.addEventListener("click", function(e) {
   var rgb = getColorAt(canvas, coords.x, coords.y);
   cm.addColor(rgb);
 });
+
+var threeDeeDragFlag = 0;
+var threeDee = document.getElementById("threedee");
+threeDee.addEventListener("mousedown", function(){
+  threeDeeDragFlag = 0;
+}, false);
+threeDee.addEventListener("mousemove", function(){
+  threeDeeDragFlag = 1;
+}, false);
+threeDee.addEventListener("mouseup", function(){
+  if(!threeDeeDragFlag){
+    $('#threedee').hide().children().not('#loading').remove();
+    stopAnimation = true;
+    $("body").css("overflow", "visible");
+  }
+}, false);
