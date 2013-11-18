@@ -58,10 +58,11 @@ function setup3DScene() {
   };
 
   function init(skittles) {
+    toggleFullScreen();
+    
     renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth - 24, window.innerHeight - 24);
     $('#threedee').append(renderer.domElement);
-
 
     camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = skittles.height * 1;
