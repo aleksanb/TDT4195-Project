@@ -141,7 +141,7 @@ function Filter(type, imgcache) {
               var xPos = pos.x + boxX + offset;
               var yPos = pos.y + boxY + offset;
               var iPos = to1D(xPos, yPos, width);
-              var val = newimg.data[iPos];  //red channel
+              var val = rgbToGreyValue([newimg.data[iPos], newimg.data[iPos + 1], newimg.data[iPos + 2]]);
               valuesInBox.push(val);
             }
           }
