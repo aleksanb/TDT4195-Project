@@ -111,18 +111,6 @@ function Filter(type, imgcache) {
       }
       return newimg;
     },
-    "Threshold": function(img) {
-      cx.putImageData(img, 0, 0);
-      var threshold = 60;
-      var newimg = cx.getImageData(0, 0, can.width, can.height);
-      for (var i = 0; i < newimg.data.length; i += 4) {
-        var val = newimg.data[i] > threshold ? 255 : 0;
-        newimg.data[i] = val;
-        newimg.data[i + 1] = val;
-        newimg.data[i + 2] = val;
-      }
-      return newimg;
-    },
     "Median filter (greyscale)": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, width, height);
