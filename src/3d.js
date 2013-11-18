@@ -57,15 +57,6 @@ function setup3DScene() {
     ]
   };
 
-  function loadImage(path) {
-    var img = new Image();
-    img.onload = function() {
-      init(skittles);
-    };
-    img.src = path;
-    return img;
-  }
-
   function init(skittles) {
     renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth - 24, window.innerHeight - 24);
@@ -86,7 +77,7 @@ function setup3DScene() {
     canvas.width = skittles.width;
     canvas.height = skittles.height;
     var ctx = canvas.getContext('2d');
-    ctx.drawImage(backgroundImage, 0, 0);
+    ctx.drawImage(fm.original, 0, 0);
     var texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;
 
@@ -163,8 +154,6 @@ function setup3DScene() {
     light.position = new THREE.Vector3(0, 100, 400);
     scene.add(light);
 
-    //Remove H1 that says Loading...
-    $("#loading").remove();
     $("body").css("overflow", "hidden");
 
     stopAnimation = false;
@@ -198,5 +187,5 @@ function setup3DScene() {
     skittles = exports;
   }
 
-  backgroundImage = loadImage(skittles.filePath);
+  init(skittles);
 }

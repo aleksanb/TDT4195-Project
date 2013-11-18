@@ -34,8 +34,10 @@ body {
     border: 0;
 }
 
-#loading {
+#controls {
     text-align: center;
+    color: #CCC;
+    margin: 5px;
 }
 
 #threedee {

@@ -60,7 +60,6 @@ function go3D() {
   rm.export();
   $("#threedee").show();
   setup3DScene();
-  setTimeout(toggleFullScreen, 0);
 }
 
 canvas.addEventListener("click", function(e) {
@@ -79,9 +78,8 @@ threeDee.addEventListener("mousemove", function(){
 }, false);
 threeDee.addEventListener("mouseup", function(){
   if(!threeDeeDragFlag){
-    $('#threedee').hide().children().not('#loading').remove();
+    $('#threedee').hide().children().not("#controls").remove();
     stopAnimation = true;
     $("body").css("overflow", "visible");
-    toggleFullScreen();
   }
 }, false);
