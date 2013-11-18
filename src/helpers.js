@@ -268,7 +268,7 @@ if (typeof String.prototype.startsWith != 'function') {
 function loadImage(file) {
   var reader = new FileReader();
   reader.readAsDataURL(file);
-  fileName = "res/" + file.name;
+  filePath = "img/" + file.name;
   reader.onload = function(event){
     fm.original.src = event.target.result;
     fm.resetFilters();
