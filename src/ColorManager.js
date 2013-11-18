@@ -21,11 +21,11 @@ ColorManager.prototype.createDOMColorNode = function(rgb) {
   });
 
   return node;
-}
+};
 
 ColorManager.prototype.getId = function(rgb) {
   return "rgb_" + rgb[0] + "_" + rgb[1] + "_" + rgb[2];
-}
+};
 
 ColorManager.prototype.addColor = function(rgb) {
   if (!this.hasColor(rgb)) {
@@ -33,14 +33,14 @@ ColorManager.prototype.addColor = function(rgb) {
     var node = this.createDOMColorNode(rgb);
     this.DOMcolors.appendChild(node);
   }
-}
+};
 
 ColorManager.prototype.removeColor = function(rgb) {
   var index = this.indexOfColor(rgb);
   this.colors.splice(index, 1);
   var node = document.getElementById(this.getId(rgb));
   this.DOMcolors.removeChild(node);
-}
+};
 
 ColorManager.prototype.hasColor = function(rgb) {
   var hasColor = false;
@@ -52,7 +52,7 @@ ColorManager.prototype.hasColor = function(rgb) {
     }
   }
   return hasColor;
-}
+};
 
 ColorManager.prototype.indexOfColor = function(rgb) {
   var index = -1;
@@ -64,4 +64,4 @@ ColorManager.prototype.indexOfColor = function(rgb) {
     }
   }
   return index;
-}
+};

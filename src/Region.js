@@ -21,11 +21,11 @@ Region.prototype.getCenter2D = function() {
     };
   }
   return this.center2D;
-}
+};
 
 Region.prototype.getNumberOfRegionsWithThisColor = function() {
   return rm.getColorCount()[this.colorId];
-}
+};
 
 Region.prototype.getRadius = function() {
   if (null == this.radius) {
@@ -34,7 +34,7 @@ Region.prototype.getRadius = function() {
     this.radius = averageDiff / 2;
   }
   return this.radius;
-}
+};
 
 Region.prototype.getDimensions = function() {
   var minX = this.pixels2D[0].x;
@@ -62,7 +62,7 @@ Region.prototype.getDimensions = function() {
     width: this.width,
     height: this.height
   };
-}
+};
 
 Region.prototype.getWidth = function() {
   if (null === this.width) {
@@ -75,4 +75,4 @@ Region.prototype.getHeight = function() {
     this.getDimensions();
   }
   return this.height;
-}
+};

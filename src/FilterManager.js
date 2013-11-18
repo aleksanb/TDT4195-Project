@@ -55,4 +55,4 @@ function FilterManager(formId, ctx) {
 FilterManager.prototype.resetFilters = function() {
   this.filters.length = 0;
   $('.appliedFilter').remove();
-}
+};
