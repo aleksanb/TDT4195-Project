@@ -264,3 +264,16 @@ if (typeof String.prototype.startsWith != 'function') {
     return this.indexOf(str) == 0;
   };
 }
+
+function loadImage(file) {
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  fileName = "res/" + file.name;
+  reader.onload = function(event){
+    fm.original.src = event.target.result;
+    fm.resetFilters();
+  };
+  reader.onerror = function(event){
+    alert("Could not read file");
+  };
+}

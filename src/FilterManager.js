@@ -42,6 +42,7 @@ function FilterManager(formId, ctx) {
   this.createDOMFilterNode = function(type) {
     var node = document.createElement("span");
     node.innerHTML = type;
+    node.className = "appliedFilter";
     return node;
   }
 
@@ -49,4 +50,9 @@ function FilterManager(formId, ctx) {
     var img = !!this.filters.length ? this.filters[this.filters.length - 1].img : this.img;
     ctx.putImageData(img, 0, 0);
   }
+}
+
+FilterManager.prototype.resetFilters = function() {
+  this.filters.length = 0;
+  $('.appliedFilter').remove();
 }

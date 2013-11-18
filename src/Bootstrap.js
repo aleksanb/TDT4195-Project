@@ -7,6 +7,13 @@ var removeButton = document.getElementById("remove");
 var cm = new ColorManager();
 var rm = new RegionManager();
 
+document.getElementById("file1").addEventListener("change", function(event) {
+  var file = event.target.files[0];
+  if (file){
+    loadImage(file);
+  }
+});
+
 document.getElementById("add").addEventListener("click", function() {
   fm.add(filterType.value);
   removeButton.disabled = !fm.filters.length;
