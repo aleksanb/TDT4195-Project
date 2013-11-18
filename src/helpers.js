@@ -281,3 +281,7 @@ function loadImage(file) {
 function rgbToGreyValue(rgb) {
   return 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
 }
+
+function euclideanDistance(pos1, pos2) {
+  return Math.sqrt(Math.pow(pos1.x - pos2.x, 2) + Math.pow(pos1.y - pos2.y, 2));
+}

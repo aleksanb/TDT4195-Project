@@ -62,11 +62,31 @@ function go3D() {
   setup3DScene();
 }
 
-canvas.addEventListener("click", function(e) {
-  var coords = relMouseCoords(e, canvas);
-  var rgb = getColorAt(canvas, coords.x, coords.y);
-  cm.addColor(rgb);
-});
+var averageObjectRadius = null;
+var canvasDragFlag = 0;
+var canvasStartMouseDownPos = {};
+canvas.addEventListener("mousedown", function(e){
+  canvasStartMouseDownPos = relMouseCoords(e, canvas);
+  canvasDragFlag = 0;
+}, false);
+canvas.addEventListener("mousemove", function(){
+  canvasDragFlag = 1;
+}, false);
+canvas.addEventListener("mouseup", function(e){
+  var currentPos = relMouseCoords(e, canvas);
+  if(canvasDragFlag){ //drag
+    var distance = euclideanDistance(canvasStartMouseDownPos, currentPos);
+    if (distance > 4) {
+      averageObjectRadius = Math.round(0.5 * distance);
+      $('#averageRadius').html("<span>Average object radius: " + averageObjectRadius + "</span>");
+    }
+  } else {  //click
+    var rgb = getColorAt(canvas, currentPos.x, currentPos.y);
+    cm.addColor(rgb);
+  }
+}, false);
+
+
 
 var threeDeeDragFlag = 0;
 var threeDee = document.getElementById("threedee");

@@ -23,6 +23,10 @@
         <option>Median filter (greyscale)</option>
         <option>Erosion</option>
         <option>Dilation</option>
+        <option>Greyscale</option>
+        <option>Hough circle transform</option>
+        <option>Canny Edge detection</option>
+        <option>Basic global threshold</option>
     </select>
 
     <button id="add">Apply</button>
@@ -31,10 +35,12 @@
     <div id="filters">
         <span>Original</span>
     </div>
+
     <canvas width=603 height=316 id="canvas"></canvas>
 
     <div id="colors">
     </div>
+    <div id="averageRadius"></div>
 
     <br><br>
     <div class=clear></div>
@@ -60,5 +66,6 @@
     <script src="lib/OrbitControls.js"></script>
     <script src="lib/Detector.js"></script>
     <script src="src/3d.js"></script>
+    <script src="lib/opencv.js"></script>
 </body>
 </html>

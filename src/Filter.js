@@ -257,7 +257,6 @@ function Filter(type, imgcache) {
       var seeds1D = [];
       for (var i = 0; i < newimg.data.length; i += 4) {
         if (newimg.data[i] || newimg.data[i + 1] || newimg.data[i + 2]) {
-          pos = to2D(i, width, height);
           seeds1D.push(i);
         }
       }
@@ -353,6 +352,109 @@ function Filter(type, imgcache) {
       }
 
       var newimg = cx.getImageData(0, 0, width, height);
+      return newimg;
+    },
+    "Greyscale": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
+        var grey = rgbToGreyValue(rgb);
+        newimg.data[i] = grey;
+        newimg.data[i + 1] = grey;
+        newimg.data[i + 2] = grey;
+      }
+      return newimg;
+    },
+    "Canny Edge detection": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      var cannyImage = cvCreateImage(width, height);
+      cannyImage.imageData = newimg;
+      cannyImage.RGBA = newimg.data;
+      cannyImage.canvas = can;
+
+      cvCvtColor(cannyImage, cannyImage, CV_CODE.RGB2GRAY);
+      cvCanny(cannyImage, cannyImage, 50, 80);
+      return cannyImage.imageData;
+    },
+    "Hough circle transform": function(img) {
+      cx.fillStyle = "black";
+      cx.fillRect(0, 0, width, height);
+
+      var edgePixels = [];
+      for (var i = 0; i < img.data.length; i += 4) {
+        if (img.data[i] || img.data[i + 1] || img.data[i + 2]) {
+          edgePixels.push(i);
+        }
+      }
+
+      var eAngle = 2 * Math.PI;
+      var minRadius = 13;
+      var maxRadius = 23;
+      var bestRadius = null;
+      var bestRadiusIntensity = 0;
+      if (null != averageObjectRadius) {
+        minRadius = averageObjectRadius;
+        maxRadius = averageObjectRadius;
+      }
+
+      var strokeCircles = function(radius) {
+        cx.strokeStyle = "white";
+        for (var i = 0; i < edgePixels.length; i++) {
+          var pos = to2D(edgePixels[i], width, height);
+          cx.globalAlpha = Math.max(1 / (radius * Math.PI), 0.015);
+          cx.beginPath();
+          cx.arc(pos.x, pos.y, radius, 0, eAngle);
+          cx.stroke();
+        }
+      }
+
+      for (var radius = minRadius; radius <= maxRadius; radius++) {
+        console.log("trying radius", radius);
+        strokeCircles(radius);
+        var tempImg = cx.getImageData(0, 0, width, height);
+        var maxIntensity = 0;
+        for (var i = 0; i < tempImg.data.length; i += 4) {
+          if (tempImg.data[i] > maxIntensity) {
+            maxIntensity = tempImg.data[i];
+          }
+        }
+        console.log("maxintensity", maxIntensity);
+        if (maxIntensity > bestRadiusIntensity) {
+          bestRadiusIntensity = maxIntensity;
+          bestRadius = radius;
+        }
+        can.width = can.width;
+        cx.fillStyle = "black";
+        cx.fillRect(0, 0, width, height);
+      }
+
+      autoFoundRadius = bestRadius;
+      strokeCircles(bestRadius);
+
+      return cx.getImageData(0, 0, width, height);
+    },
+    "Basic global threshold": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+
+      var maxIntensity = 0;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        if (newimg.data[i] > maxIntensity) {
+          maxIntensity = newimg.data[i];
+        }
+      }
+      var threshold = maxIntensity / 2.8;
+
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var val = newimg.data[i] > threshold ? 255 : 0;
+        newimg.data[i] = val;
+        newimg.data[i + 1] = val;
+        newimg.data[i + 2] = val;
+      }
       return newimg;
     }
   }[type];
