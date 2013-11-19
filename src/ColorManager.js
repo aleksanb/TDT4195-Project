@@ -68,36 +68,79 @@ ColorManager.prototype.indexOfColor = function(rgb) {
 
 
 ColorManager.prototype.autoGroupColors = function(colors) {
-  var labThreshold = 8;
-  var nextGroupId = 0;
+  var hueThreshold = 6;
+  var labThreshold = 6.6;
+
+  /*
+  var hues = [];
+  for (var a = 0; a < 10; a++) {
+    hues.push(0);
+  }
+
   for (var i = 0; i < colors.length; i++) {
     var rgb = colors[i];
-    if (typeof rgb["groupId"] === "undefined") {
-      rgb["groupId"] = nextGroupId++;
+    var hsv = RGBtoHSV(rgb);
+    var hue = Math.floor(hsv[0] / 36);
+    hues[hue]++;
+  }
+  */
+
+  /*
+   x = y = 0
+   foreach angle {
+   x += cos(angle)
+   y += sin(angle)
+   }
+   average_angle = atan2(y, x)
+   */
+
+  var groups = [];
+  for (var i = 0; i < colors.length; i++) {
+    var rgb1 = colors[i];
+    if (typeof rgb1["groupId"] === "undefined") {
+      groups.push([rgb1]);
+      rgb1["groupId"] = groups.length - 1;
     }
-    var xyz = RGBtoXYZ(rgb);
-    var lab = XYZtoLAB(xyz);
+    var hsv1 = RGBtoHSV(rgb1);
+    var hue1 = hsv1[0] + 360;
+    var xyz1 = RGBtoXYZ(rgb1);
+    var lab1 = XYZtoLAB(xyz1);
     for (var j = i + 1; j < colors.length; j++) {
       var rgb2 = colors[j];
+      var hsv2 = RGBtoHSV(rgb2);
+      var hue2 = hsv2[0] + 360;
+      var xyz2 = RGBtoXYZ(rgb2);
+      var lab2 = XYZtoLAB(xyz2);
       if (typeof rgb2["groupId"] === "undefined") {
-        var xyz2 = RGBtoXYZ(rgb2);
-        var lab2 = XYZtoLAB(xyz2);
-        if (deltae94(lab, lab2) < labThreshold) {
-          rgb2.groupId = rgb.groupId;
+        if (Math.abs(hue1 - hue2) < hueThreshold || deltae94(lab1, lab2) < labThreshold) {
+          rgb2["groupId"] = rgb1["groupId"];
+          groups[rgb2["groupId"]].push(rgb2);
         }
       }
     }
   }
 
-  for (var groupId = 0; groupId < nextGroupId; groupId++) {
-    for (var i = 0; i < colors.length; i++) {
-      var rgb = colors[i];
-      if (rgb.groupId === i) {
-        this.addColor(rgb);
-      }
+  for (var groupId = 0; groupId < groups.length; groupId++) {
+    var group = groups[groupId];
+    var ls = [];
+    var as = [];
+    var bs = [];
+    for (var i = 0; i < group.length; i++) {
+      var rgb = group[i];
+      var xyz = RGBtoXYZ(rgb);
+      var lab = XYZtoLAB(xyz);
+      ls.push(lab[0]);
+      as.push(lab[1]);
+      bs.push(lab[2]);
     }
+    var medianL = getMedian(ls);
+    var medianA = getMedian(as);
+    var medianB = getMedian(bs);
+    var medianLab = [medianL, medianA, medianB];
+    var medianXyz = LABtoXYZ(medianLab);
+    var medianRgb = XYZtoRGB(medianXyz);
+    this.addColor(medianRgb);
   }
-
 
   return colors;
 };
