@@ -23,7 +23,8 @@ function FilterManager(formId, ctx) {
   }
 
   this.add = function(type) {
-    if ((type == "Mark region centers") && rm.regions.length === 0) {
+    console.log("Applying", type);
+    if (type == "Mark region centers" && rm.regions.length === 0) {
       alert("You haven't calculated any regions yet");
       return;
     } else if (type.startsWith("Find objects")) {

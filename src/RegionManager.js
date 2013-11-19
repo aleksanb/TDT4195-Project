@@ -25,7 +25,7 @@ RegionManager.prototype.addRegion = function(pixels1D, rgb) {
 }
 
 RegionManager.prototype.getUniqueColors = function() {
-  if (this.colors.length < this.regions.length) {
+  if (this.colors.length === 0) {
     for (var i = 0; i < this.regions.length; i++) {
       var region = this.regions[i];
       var id = cm.getId(region.rgb);

@@ -519,11 +519,19 @@ function Filter(type, imgcache) {
         cx.fill();
       }
 
-      //var colors = rm.getUniqueColors();
-
-      //cm.autoGroupColors(colors); TODO
-
       return cx.getImageData(0, 0, can.width, can.height);
+    },
+    "Auto group colors": function(img) {
+      var findRegions = new Filter("Find and sanitize regions", img);
+      img = findRegions.apply(img);
+
+      var colors = rm.getUniqueColors();
+      cm.autoGroupColors(colors);
+
+      var drawRegions = new Filter("Find and sanitize regions", img);
+      img = drawRegions.apply(img);
+
+      return img;
     }
   }[type];
 }

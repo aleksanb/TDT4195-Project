@@ -121,7 +121,8 @@ function getLucky() {
     "Dilation",
     "Dilation",
     "Find and sanitize regions",
-    "Find original region colors"
+    "Find original region colors",
+    "Auto group colors",
   ];
 
 

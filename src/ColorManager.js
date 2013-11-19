@@ -67,20 +67,19 @@ ColorManager.prototype.indexOfColor = function(rgb) {
 };
 
 
-//TODO
 ColorManager.prototype.autoGroupColors = function(colors) {
   var labThreshold = 10;
-  var currentGroupId = 0;
+  var nextGroupId = 0;
   for (var i = 0; i < colors.length; i++) {
     var rgb = colors[i];
-    if (typeof rgb.groupId === "undefined") {
-      rgb.groupId = currentGroupId++;
+    if (typeof rgb["groupId"] === "undefined") {
+      rgb["groupId"] = nextGroupId++;
     }
     var xyz = RGBtoXYZ(rgb);
     var lab = XYZtoLAB(xyz);
-    for (var j = i + 1; j < colors.length; i++) {
+    for (var j = i + 1; j < colors.length; j++) {
       var rgb2 = colors[j];
-      if (typeof rgb2.groupId === "undefined") {
+      if (typeof rgb2["groupId"] === "undefined") {
         var xyz2 = RGBtoXYZ(rgb2);
         var lab2 = XYZtoLAB(xyz2);
         if (deltae94(lab, lab2) < labThreshold) {
@@ -89,6 +88,17 @@ ColorManager.prototype.autoGroupColors = function(colors) {
       }
     }
   }
-  console.log(colors);
+
+  for (var groupId = 0; groupId < nextGroupId; groupId++) {
+    for (var i = 0; i < colors.length; i++) {
+      var rgb = colors[i];
+      if (rgb.groupId === i) {
+        this.addColor(rgb);
+      }
+    }
+  }
+
+
+  return colors;
 };
 
