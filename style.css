@@ -29,10 +29,11 @@ span {
     clear: both;
 }
 
-body {
+body.threedee {
     margin: 0;
     padding: 0;
     border: 0;
+    overflow: hidden;
 }
 
 #controls {

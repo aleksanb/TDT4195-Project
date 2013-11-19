@@ -154,7 +154,7 @@ function setup3DScene() {
     light.position = new THREE.Vector3(0, 100, 400);
     scene.add(light);
 
-    $("body").css("overflow", "hidden");
+    $("body").addClass("threedee");
 
     stopAnimation = false;
     animate();

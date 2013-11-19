@@ -103,7 +103,7 @@ threeDee.addEventListener("mouseup", function(){
   if(!threeDeeDragFlag){
     $('#threedee').hide().children().not("#controls").remove();
     stopAnimation = true;
-    $("body").css("overflow", "visible");
+    $("body").removeClass("threedee");
   }
 }, false);
 
@@ -117,6 +117,7 @@ function getLucky() {
     "Canny edge detection",
     "Hough circle transform",
     "Basic global threshold",
+    "Dilation",
     "Dilation",
     "Dilation",
     "Dilation",

@@ -422,20 +422,50 @@ function Filter(type, imgcache) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, can.width, can.height);
 
+      var nonBlackPixels = 0;
       var maxIntensity = 0;
       for (var i = 0; i < newimg.data.length; i += 4) {
+        if (newimg.data[i] > 0) {
+          nonBlackPixels++;
+        }
         if (newimg.data[i] > maxIntensity) {
           maxIntensity = newimg.data[i];
         }
       }
-      var threshold = maxIntensity / 2.9;
+
+      var whitePixelsRelative = whitePixels / nonBlackPixels;
+      var factor = 0.3448275862068966;
+      var correctFactor = 0.5;
+      var threshold = 0.5;
+      while (correctFactor > 0.0001) {
+        threshold = maxIntensity * factor;
+        var whitePixels = 0;
+        for (var i = 0; i < newimg.data.length; i += 4) {
+          if (newimg.data[i] > threshold) {
+            whitePixels++;
+          }
+        }
+        whitePixelsRelative = whitePixels / nonBlackPixels;
+
+        if (whitePixelsRelative < 0.002) {
+          factor *= 1 - correctFactor;
+        } else if (whitePixelsRelative > 0.005) {
+          factor *= 1 + correctFactor;
+        } else {
+          break;
+        }
+
+        correctFactor *= 0.5;
+      }
 
       for (var i = 0; i < newimg.data.length; i += 4) {
         var val = newimg.data[i] > threshold ? 255 : 0;
         newimg.data[i] = val;
         newimg.data[i + 1] = val;
         newimg.data[i + 2] = val;
+        newimg.data[i + 3] = 255;
       }
+
       return newimg;
     },
     "(saturation + lightness) / 2": function(img) {
@@ -487,8 +517,8 @@ function Filter(type, imgcache) {
       var maxRadius = Math.round(0.75 * radius);
       var minRadius = Math.round(0.4 * radius);
       for (var i = 0; i < rm.regions.length; i++) {
-        var region = rm.regions[i];
-        var center = region.getCenter2D();
+        rm.regions[i].radius = radius;
+        var center = rm.regions[i].getCenter2D();
 
         var ls = [];
         var as = [];
@@ -513,6 +543,7 @@ function Filter(type, imgcache) {
         var medianLab = [medianL, medianA, medianB];
         var medianXyz = LABtoXYZ(medianLab);
         var medianRgb = XYZtoRGB(medianXyz);
+        rm.regions[i].rgb = medianRgb;
         cx.fillStyle = rgbToHex(medianRgb);
         cx.beginPath();
         cx.arc(center.x, center.y, maxRadius, 0, 2 * Math.PI);
@@ -522,9 +553,6 @@ function Filter(type, imgcache) {
       return cx.getImageData(0, 0, can.width, can.height);
     },
     "Auto group colors": function(img) {
-      var findRegions = new Filter("Find and sanitize regions", img);
-      img = findRegions.apply(img);
-
       var colors = rm.getUniqueColors();
       cm.autoGroupColors(colors);
 
