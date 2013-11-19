@@ -92,9 +92,9 @@ RegionManager.prototype.sanitizeRegions = function() {
     var relativeSize = radius / medianRadius;
     var relativeWidth = region.getWidth() / region.getHeight();
     var relativePixelCount = numPixels / averagePixelCount;
-    if (relativeSize > 0.4 && relativeSize < 2
-      && relativeWidth > 0.7 && relativeWidth < 1.9
-      && relativePixelCount > 0.4 && relativePixelCount < 5) {
+    if (relativeSize > 0.4 && relativeSize < 5
+      && relativeWidth > 0.5 && relativeWidth < 2
+      && relativePixelCount > 0.3 && relativePixelCount < 25) {
       this.regions.push(region);
     }
   }
@@ -107,7 +107,7 @@ RegionManager.prototype.getMedianRadius = function() {
       var region = this.regions[i];
       var radius = region.getRadius();
       var numPixels = region.pixels2D.length;
-      if (radius > 2 && numPixels > 12) { //suppress really small areas
+      if (radius > 2 && numPixels > 10) { //suppress really small areas
         radiuses.push(radius);
       }
     }

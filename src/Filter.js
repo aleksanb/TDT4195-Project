@@ -354,19 +354,6 @@ function Filter(type, imgcache) {
       var newimg = cx.getImageData(0, 0, width, height);
       return newimg;
     },
-    "Greyscale": function(img) {
-      cx.putImageData(img, 0, 0);
-      var newimg = cx.getImageData(0, 0, width, height);
-
-      for (var i = 0; i < newimg.data.length; i += 4) {
-        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
-        var grey = rgbToGreyValue(rgb);
-        newimg.data[i] = grey;
-        newimg.data[i + 1] = grey;
-        newimg.data[i + 2] = grey;
-      }
-      return newimg;
-    },
     "Canny Edge detection": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, width, height);
@@ -384,10 +371,17 @@ function Filter(type, imgcache) {
       cx.fillStyle = "black";
       cx.fillRect(0, 0, width, height);
 
+      var minX = 1;
+      var maxX = width - 2;
+      var minY = 1;
+      var maxY = height - 2;
       var edgePixels = [];
       for (var i = 0; i < img.data.length; i += 4) {
         if (img.data[i] || img.data[i + 1] || img.data[i + 2]) {
-          edgePixels.push(i);
+          var pos = to2D(i, width, height);
+          if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+            edgePixels.push(i);
+          }
         }
       }
 
@@ -397,15 +391,15 @@ function Filter(type, imgcache) {
       var bestRadius = null;
       var bestRadiusIntensity = 0;
       if (null != averageObjectRadius) {
-        minRadius = averageObjectRadius;
+        minRadius = averageObjectRadius - 1;
         maxRadius = averageObjectRadius;
       }
 
       var strokeCircles = function(radius) {
         cx.strokeStyle = "white";
+        cx.globalAlpha = 0.02;
         for (var i = 0; i < edgePixels.length; i++) {
           var pos = to2D(edgePixels[i], width, height);
-          cx.globalAlpha = Math.max(1 / (radius * Math.PI), 0.015);
           cx.beginPath();
           cx.arc(pos.x, pos.y, radius, 0, eAngle);
           cx.stroke();
@@ -447,13 +441,24 @@ function Filter(type, imgcache) {
           maxIntensity = newimg.data[i];
         }
       }
-      var threshold = maxIntensity / 2.8;
+      var threshold = maxIntensity / 2.9;
 
       for (var i = 0; i < newimg.data.length; i += 4) {
         var val = newimg.data[i] > threshold ? 255 : 0;
         newimg.data[i] = val;
         newimg.data[i + 1] = val;
         newimg.data[i + 2] = val;
+      }
+      return newimg;
+    },
+    "Intensify": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+      var factor = 1.3;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        newimg.data[i] *= factor;
+        newimg.data[i + 1] *= factor;
+        newimg.data[i + 2] *= factor;
       }
       return newimg;
     }

@@ -17,7 +17,7 @@ span {
     text-shadow: 0 0 4px #000;
 }
 
-#colors > span {
+#colors > span, #averageRadius > span {
     cursor: pointer;
 }
 

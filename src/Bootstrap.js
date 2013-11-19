@@ -29,7 +29,7 @@ document.getElementById("go3d").addEventListener("click", function() {
 });
 
 function go3D() {
-  if (cm.colors.length === 0) {
+  if (cm.colors.length === 0 && rm.regions.length === 0) {
     alert("You should mark at least one color by clicking the image");
     return false;
   }
@@ -46,12 +46,12 @@ function go3D() {
     }
   }
 
-  if (!foundObjects) {
+  if (!foundObjects && rm.regions.length === 0) {
     fm.add("Find objects using LAB");
     return go3D();
   }
 
-  if (!regionsSanitized) {
+  if (!regionsSanitized && rm.regions.length === 0) {
     fm.add("Sanitize regions");
     return go3D();
   }
@@ -86,7 +86,10 @@ canvas.addEventListener("mouseup", function(e){
   }
 }, false);
 
-
+$('#averageRadius').click(function() {
+  averageObjectRadius = null;
+  $('#averageRadius').children().remove();
+});
 
 var threeDeeDragFlag = 0;
 var threeDee = document.getElementById("threedee");
