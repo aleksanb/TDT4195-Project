@@ -86,7 +86,7 @@ function Filter(type, imgcache) {
         labColors.push(lab);
       }
 
-      var threshold = 12.5;
+      var threshold = 13;
       for (var i = 0; i < newimg.data.length; i += 4) {
         var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
         var xyz = RGBtoXYZ(rgb);
@@ -203,41 +203,30 @@ function Filter(type, imgcache) {
       tempCtx.putImageData(img, 0, 0);
       var tempImg = tempCtx.getImageData(0, 0, width, height);
 
-      var structuringElement = [
-        [false, true, false],
-        [true, true, true],
-        [false, true, false]
-      ];
-      var boxDimension = structuringElement.length;
-      var offset = -parseInt(boxDimension / 2);
-      var minX = Math.abs(offset);
-      var minY = Math.abs(offset);
-      var maxX = width + offset - 1;
-      var maxY = height + offset - 1;
+      var minX = 1;
+      var minY = 1;
+      var maxX = width  - 1;
+      var maxY = height - 1;
       for (var i = 0; i < newimg.data.length; i += 4) {
         var pos = to2D(i, width, height);
-        if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
-          var resultColor = [0, 0, 0];
-          dilationBox:
-            for (var boxY = 0; boxY < boxDimension; boxY++) {
-              for (var boxX = 0; boxX < boxDimension; boxX++) {
-                var xPos = pos.x + boxX + offset;
-                var yPos = pos.y + boxY + offset;
-                var iPos = to1D(xPos, yPos, width);
-                var rgbSum = tempImg.data[iPos] + tempImg.data[iPos + 1] + tempImg.data[iPos + 2];
-                if (structuringElement[boxY][boxX] && rgbSum > 0) {
-                  resultColor = [tempImg.data[iPos], tempImg.data[iPos + 1], tempImg.data[iPos + 2]];
-                  break dilationBox;
-                }
-              }
-            }
-          newimg.data[i] = resultColor[0];
-          newimg.data[i + 1] = resultColor[1];
-          newimg.data[i + 2] = resultColor[2];
-        } else {
-          newimg.data[i] = 0;
-          newimg.data[i + 1] = 0;
-          newimg.data[i + 2] = 0;
+        if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY
+          && (tempImg.data[i] || tempImg.data[i + 1] || tempImg.data[i + 2])) {
+          var rgb = [tempImg.data[i], tempImg.data[i + 1], tempImg.data[i + 2]];
+
+          var neighbours = [
+            {x: pos.x - 1, y: pos.y},
+            {x: pos.x + 1, y: pos.y},
+            {x: pos.x, y: pos.y + 1},
+            {x: pos.x, y: pos.y - 1}
+          ];
+
+          for (var j = 0; j < neighbours.length; j++) {
+            var neighbourPos2D = neighbours[j];
+            var neighbourPos1D = to1D(neighbourPos2D.x, neighbourPos2D.y, width);
+            newimg.data[neighbourPos1D] = rgb[0];
+            newimg.data[neighbourPos1D + 1] = rgb[1];
+            newimg.data[neighbourPos1D + 2] = rgb[2];
+          }
         }
       }
       return newimg;
@@ -407,7 +396,6 @@ function Filter(type, imgcache) {
       }
 
       for (var radius = minRadius; radius <= maxRadius; radius++) {
-        console.log("trying radius", radius);
         strokeCircles(radius);
         var tempImg = cx.getImageData(0, 0, width, height);
         var maxIntensity = 0;
@@ -416,7 +404,6 @@ function Filter(type, imgcache) {
             maxIntensity = tempImg.data[i];
           }
         }
-        console.log("maxintensity", maxIntensity);
         if (maxIntensity > bestRadiusIntensity) {
           bestRadiusIntensity = maxIntensity;
           bestRadius = radius;
@@ -451,6 +438,21 @@ function Filter(type, imgcache) {
       }
       return newimg;
     },
+    "(saturation + lightness) / 2": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
+        var hsv = RGBtoHSV(rgb);
+        var val = (hsv[1] * 255 + hsv[2]) / 2;
+        newimg.data[i] = val;
+        newimg.data[i + 1] = val;
+        newimg.data[i + 2] = val;
+      }
+
+      return newimg;
+    },
     "Intensify": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, can.width, can.height);
@@ -473,6 +475,9 @@ function Filter(type, imgcache) {
     "Find original region colors": function(img) {
       cx.drawImage(fm.original, 0, 0);
       var originalImg = cx.getImageData(0, 0, can.width, can.height);
+      can.width = can.width;
+      cx.fillStyle = "black";
+      cx.fillRect(0, 0, width, height);
 
       var minX = 1;
       var maxX = width - 1;
@@ -485,32 +490,38 @@ function Filter(type, imgcache) {
         var region = rm.regions[i];
         var center = region.getCenter2D();
 
-        var hs = [];
-        var ss = [];
-        var vs = [];
+        var ls = [];
+        var as = [];
+        var bs = [];
         for (var x = center.x - maxRadius; x <= center.x + maxRadius; x++) {
           for (var y = center.y - maxRadius; y <= center.y + maxRadius; y++) {
             var distance = euclideanDistance({x: x, y: y}, center);
             if (x >= minX && x <= maxX && y >= minY && y <= maxY && distance >= minRadius && distance <= maxRadius) {
               var oneD = to1D(x, y, width);
               var rgb = [originalImg.data[oneD], originalImg.data[oneD + 1], originalImg.data[oneD + 2]];
-              var hsv = RGBtoHSV(rgb);
-              hs.push(hsv[0]);
-              ss.push(hsv[1]);
-              vs.push(hsv[2]);
+              var xyz = RGBtoXYZ(rgb);
+              var lab = XYZtoLAB(xyz);
+              ls.push(lab[0]);
+              as.push(lab[1]);
+              bs.push(lab[2]);
             }
           }
         }
-        var medianH = getMedian(hs);
-        var medianS = getMedian(ss);
-        var medianV = Math.round(getMedian(vs));
-        var medianHsv = [medianH, medianS, medianV];
-        var medianRgb = HSVtoRGB(medianHsv);
+        var medianL = getMedian(ls);
+        var medianA = getMedian(as);
+        var medianB = getMedian(bs);
+        var medianLab = [medianL, medianA, medianB];
+        var medianXyz = LABtoXYZ(medianLab);
+        var medianRgb = XYZtoRGB(medianXyz);
         cx.fillStyle = rgbToHex(medianRgb);
         cx.beginPath();
         cx.arc(center.x, center.y, maxRadius, 0, 2 * Math.PI);
         cx.fill();
       }
+
+      //var colors = rm.getUniqueColors();
+
+      //cm.autoGroupColors(colors); TODO
 
       return cx.getImageData(0, 0, can.width, can.height);
     }

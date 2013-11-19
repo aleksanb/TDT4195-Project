@@ -65,3 +65,30 @@ ColorManager.prototype.indexOfColor = function(rgb) {
   }
   return index;
 };
+
+
+//TODO
+ColorManager.prototype.autoGroupColors = function(colors) {
+  var labThreshold = 10;
+  var currentGroupId = 0;
+  for (var i = 0; i < colors.length; i++) {
+    var rgb = colors[i];
+    if (typeof rgb.groupId === "undefined") {
+      rgb.groupId = currentGroupId++;
+    }
+    var xyz = RGBtoXYZ(rgb);
+    var lab = XYZtoLAB(xyz);
+    for (var j = i + 1; j < colors.length; i++) {
+      var rgb2 = colors[j];
+      if (typeof rgb2.groupId === "undefined") {
+        var xyz2 = RGBtoXYZ(rgb2);
+        var lab2 = XYZtoLAB(xyz2);
+        if (deltae94(lab, lab2) < labThreshold) {
+          rgb2.groupId = rgb.groupId;
+        }
+      }
+    }
+  }
+  console.log(colors);
+};
+

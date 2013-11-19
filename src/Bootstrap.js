@@ -106,3 +106,42 @@ threeDee.addEventListener("mouseup", function(){
     $("body").css("overflow", "visible");
   }
 }, false);
+
+document.getElementById("getLucky").addEventListener("click", function() {
+  getLucky();
+});
+
+function getLucky() {
+  var todo = [
+    "Canny edge detection",
+    "Hough circle transform",
+    "Basic global threshold",
+    "Dilation",
+    "Dilation",
+    "Dilation",
+    "Dilation",
+    "Find and sanitize regions",
+    "Find original region colors"
+  ];
+
+
+  for (var i = 0; i < fm.filters.length; i++) {
+    var filter = fm.filters[i];
+    var type = filter.type;
+    if (type === todo[0]) {
+      todo.splice(0, 1);
+    } else {
+      break;
+    }
+  }
+
+  if (todo.length > 0) {
+    fm.add(todo[0]);
+    setTimeout(getLucky, 0);
+    return;
+  }
+
+  removeButton.disabled = !fm.filters.length;
+
+  //go3D();
+}
