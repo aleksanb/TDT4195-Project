@@ -354,7 +354,7 @@ function Filter(type, imgcache) {
       var newimg = cx.getImageData(0, 0, width, height);
       return newimg;
     },
-    "Canny Edge detection": function(img) {
+    "Canny edge detection": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, width, height);
 
@@ -454,12 +454,28 @@ function Filter(type, imgcache) {
     "Intensify": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, can.width, can.height);
-      var factor = 1.3;
+
+      var maxIntensity = 0;
       for (var i = 0; i < newimg.data.length; i += 4) {
-        newimg.data[i] *= factor;
-        newimg.data[i + 1] *= factor;
-        newimg.data[i + 2] *= factor;
+        if (newimg.data[i] > maxIntensity) {
+          maxIntensity = newimg.data[i];
+        }
       }
+
+      var factor = 300 / maxIntensity;
+      for (var i = 0; i < newimg.data.length; i += 4) {
+        newimg.data[i] = Math.min(newimg.data[i] * factor, 255);
+        newimg.data[i + 1] = Math.min(newimg.data[i + 1] * factor, 255);
+        newimg.data[i + 2] = Math.min(newimg.data[i + 2] * factor, 255);
+      }
+      return newimg;
+    },
+    "Find original region colors": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+
+      alert('Not implemented yet');
+      
       return newimg;
     }
   }[type];

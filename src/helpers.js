@@ -266,15 +266,17 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 
 function loadImage(file) {
+  if (!file.type.startsWith("image")) {
+    return alert("That file is not going to work here...");
+  }
   var reader = new FileReader();
   reader.readAsDataURL(file);
-  filePath = "img/" + file.name;
   reader.onload = function(event){
     fm.original.src = event.target.result;
     fm.resetFilters();
   };
   reader.onerror = function(event){
-    alert("Could not read file");
+    alert("Could not read the file");
   };
 }
 
