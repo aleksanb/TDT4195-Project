@@ -1,4 +1,4 @@
-var filePath = "img/sweetsA03.png";
+var filePath = "img/sweetsA01.png";
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var fm = new FilterManager("filters", ctx);

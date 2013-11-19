@@ -16,8 +16,8 @@ Region.prototype.getCenter2D = function() {
       ySum += pixel.y;
     }
     this.center2D = {
-      x: xSum / this.pixels2D.length,
-      y: ySum / this.pixels2D.length
+      x: Math.round(xSum / this.pixels2D.length),
+      y: Math.round(ySum / this.pixels2D.length)
     };
   }
   return this.center2D;

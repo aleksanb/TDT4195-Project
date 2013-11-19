@@ -242,7 +242,7 @@ function Filter(type, imgcache) {
       }
       return newimg;
     },
-    "Sanitize regions": function(img) {
+    "Find and sanitize regions": function(img) {
       cx.putImageData(img, 0, 0);
       var newimg = cx.getImageData(0, 0, width, height);
 
@@ -391,7 +391,7 @@ function Filter(type, imgcache) {
       var bestRadius = null;
       var bestRadiusIntensity = 0;
       if (null != averageObjectRadius) {
-        minRadius = averageObjectRadius - 1;
+        minRadius = averageObjectRadius;
         maxRadius = averageObjectRadius;
       }
 
@@ -471,12 +471,48 @@ function Filter(type, imgcache) {
       return newimg;
     },
     "Find original region colors": function(img) {
-      cx.putImageData(img, 0, 0);
-      var newimg = cx.getImageData(0, 0, can.width, can.height);
+      cx.drawImage(fm.original, 0, 0);
+      var originalImg = cx.getImageData(0, 0, can.width, can.height);
 
-      alert('Not implemented yet');
-      
-      return newimg;
+      var minX = 1;
+      var maxX = width - 1;
+      var minY = 1;
+      var maxY = height - 1;
+      var radius = (averageObjectRadius ? averageObjectRadius : autoFoundRadius);
+      var maxRadius = Math.round(0.75 * radius);
+      var minRadius = Math.round(0.4 * radius);
+      for (var i = 0; i < rm.regions.length; i++) {
+        var region = rm.regions[i];
+        var center = region.getCenter2D();
+
+        var hs = [];
+        var ss = [];
+        var vs = [];
+        for (var x = center.x - maxRadius; x <= center.x + maxRadius; x++) {
+          for (var y = center.y - maxRadius; y <= center.y + maxRadius; y++) {
+            var distance = euclideanDistance({x: x, y: y}, center);
+            if (x >= minX && x <= maxX && y >= minY && y <= maxY && distance >= minRadius && distance <= maxRadius) {
+              var oneD = to1D(x, y, width);
+              var rgb = [originalImg.data[oneD], originalImg.data[oneD + 1], originalImg.data[oneD + 2]];
+              var hsv = RGBtoHSV(rgb);
+              hs.push(hsv[0]);
+              ss.push(hsv[1]);
+              vs.push(hsv[2]);
+            }
+          }
+        }
+        var medianH = getMedian(hs);
+        var medianS = getMedian(ss);
+        var medianV = Math.round(getMedian(vs));
+        var medianHsv = [medianH, medianS, medianV];
+        var medianRgb = HSVtoRGB(medianHsv);
+        cx.fillStyle = rgbToHex(medianRgb);
+        cx.beginPath();
+        cx.arc(center.x, center.y, maxRadius, 0, 2 * Math.PI);
+        cx.fill();
+      }
+
+      return cx.getImageData(0, 0, can.width, can.height);
     }
   }[type];
 }
