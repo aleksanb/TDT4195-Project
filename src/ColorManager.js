@@ -68,7 +68,7 @@ ColorManager.prototype.indexOfColor = function(rgb) {
 
 
 ColorManager.prototype.autoGroupColors = function(colors) {
-  var labThreshold = 10;
+  var labThreshold = 8;
   var nextGroupId = 0;
   for (var i = 0; i < colors.length; i++) {
     var rgb = colors[i];

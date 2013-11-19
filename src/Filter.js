@@ -528,6 +528,9 @@ function Filter(type, imgcache) {
       var colors = rm.getUniqueColors();
       cm.autoGroupColors(colors);
 
+      var drawRegions = new Filter("Find objects using LAB", img);
+      img = drawRegions.apply(img);
+
       var drawRegions = new Filter("Find and sanitize regions", img);
       img = drawRegions.apply(img);
 
