@@ -11,8 +11,7 @@ span {
     color: #fff;
     border: 1px solid #222;
     border-radius: 3px;
-    font-family: sans-serif;
-    font-size: 12px;
+    font-size: 16px;
     float: left;
     text-shadow: 0 0 4px #000;
 }
@@ -23,6 +22,7 @@ span {
 
 #canvas {
     cursor: crosshair;
+    margin-top: 10px;
 }
 
 .clear {
@@ -51,4 +51,24 @@ body.threedee {
     bottom: 0;
     left: 0;
     z-index: 1;
+}
+
+h1 {
+    margin: 10px 0;
+}
+
+div.authors {
+    margin-bottom: 15px;
+    color: #666;
+}
+
+@font-face {
+    font-family: norwester;
+    src: url(norwester.woff);
+    font-weight:400;
+}
+
+body {
+    font-family: norwester, georgia, serif;
+    font-size: 18px;
 }

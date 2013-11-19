@@ -42,6 +42,11 @@ ColorManager.prototype.removeColor = function(rgb) {
   this.DOMcolors.removeChild(node);
 };
 
+ColorManager.prototype.removeAllColors = function(rgb) {
+  this.colors.length = 0;
+  $("#colors").children().remove();
+}
+
 ColorManager.prototype.hasColor = function(rgb) {
   var hasColor = false;
   for (var i = 0; i < this.colors.length; i++) {

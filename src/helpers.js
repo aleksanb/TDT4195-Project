@@ -275,6 +275,8 @@ function loadImage(file) {
   reader.onload = function(event){
     fm.original.src = event.target.result;
     fm.resetFilters();
+    cm.removeAllColors();
+    $('#averageRadius').click();
   };
   reader.onerror = function(event){
     alert("Could not read the file");

@@ -109,6 +109,7 @@ threeDee.addEventListener("mouseup", function(){
 
 document.getElementById("getLucky").addEventListener("click", function() {
   filtersToStartWith = fm.filters.length;
+  cm.removeAllColors();
   getLucky();
 });
 
