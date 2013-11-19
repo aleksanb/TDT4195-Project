@@ -108,6 +108,7 @@ threeDee.addEventListener("mouseup", function(){
 }, false);
 
 document.getElementById("getLucky").addEventListener("click", function() {
+  filtersToStartWith = fm.filters.length;
   getLucky();
 });
 
@@ -123,11 +124,11 @@ function getLucky() {
     "Dilation",
     "Find and sanitize regions",
     "Find original region colors",
-    "Auto group colors",
+    "Auto group colors"
   ];
 
 
-  for (var i = 0; i < fm.filters.length; i++) {
+  for (var i = filtersToStartWith; i < fm.filters.length; i++) {
     var filter = fm.filters[i];
     var type = filter.type;
     if (type === todo[0]) {
