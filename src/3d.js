@@ -63,7 +63,7 @@ function setup3DScene() {
     $('#threedee').append(renderer.domElement);
 
 
-    camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(69, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = skittles.height * 1;
     camera.position.x = skittles.width / 2;
     camera.position.y = skittles.height / 2;

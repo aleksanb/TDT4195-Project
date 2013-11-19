@@ -86,7 +86,7 @@ function Filter(type, imgcache) {
         labColors.push(lab);
       }
 
-      var threshold = 10;
+      var threshold = 12.5;
       for (var i = 0; i < newimg.data.length; i += 4) {
         var rgb = [newimg.data[i], newimg.data[i + 1], newimg.data[i + 2]];
         var xyz = RGBtoXYZ(rgb);
