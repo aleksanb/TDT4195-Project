@@ -146,5 +146,7 @@ function getLucky() {
 
   removeButton.disabled = !fm.filters.length;
 
-  //go3D();
+  if (confirm("Go 3D now?")) {
+    go3D();
+  }
 }
