@@ -1,5 +1,6 @@
 var filePath = "img/sweetsA01.png";
 var canvas = document.getElementById("canvas");
+var canvasWrapper = document.getElementById("canvasWrapper");
 var ctx = canvas.getContext("2d");
 var fm = new FilterManager("filters", ctx);
 var filterType = document.getElementById("filterType");
@@ -65,14 +66,14 @@ function go3D() {
 var averageObjectRadius = null;
 var canvasDragFlag = 0;
 var canvasStartMouseDownPos = {};
-canvas.addEventListener("mousedown", function(e){
+canvasWrapper.addEventListener("mousedown", function(e){
   canvasStartMouseDownPos = relMouseCoords(e, canvas);
   canvasDragFlag = 0;
 }, false);
-canvas.addEventListener("mousemove", function(){
+canvasWrapper.addEventListener("mousemove", function(){
   canvasDragFlag = 1;
 }, false);
-canvas.addEventListener("mouseup", function(e){
+canvasWrapper.addEventListener("mouseup", function(e){
   var currentPos = relMouseCoords(e, canvas);
   if(canvasDragFlag){ //drag
     var distance = euclideanDistance(canvasStartMouseDownPos, currentPos);

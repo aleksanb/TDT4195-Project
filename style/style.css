@@ -71,6 +71,7 @@ body {
 #canvasWrapper {
     position: relative;
     margin: 10px 0;
+    cursor: crosshair;
 }
 
 #originalImage {
@@ -82,8 +83,4 @@ body {
 
 #originalImage.visible {
     opacity: 0.8;
-}
-
-#canvas {
-    cursor: crosshair;
 }
