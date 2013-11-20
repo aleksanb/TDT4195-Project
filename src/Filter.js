@@ -356,6 +356,18 @@ function Filter(type, imgcache) {
       cvCanny(cannyImage, cannyImage, 50, 80);
       return cannyImage.imageData;
     },
+    "Sobel edge detection": function(img) {
+      cx.putImageData(img, 0, 0);
+      var newimg = cx.getImageData(0, 0, width, height);
+
+      var sobelImage = cvCreateImage(width, height);
+      sobelImage.imageData = newimg;
+      sobelImage.RGBA = newimg.data;
+      sobelImage.canvas = can;
+      cvCvtColor(sobelImage, sobelImage, CV_CODE.RGB2GRAY);
+      cvSobel(sobelImage, sobelImage, 1, 0);
+      return sobelImage.imageData;
+    },
     "Hough circle transform": function(img) {
       cx.fillStyle = "black";
       cx.fillRect(0, 0, width, height);
@@ -366,7 +378,7 @@ function Filter(type, imgcache) {
       var maxY = height - 2;
       var edgePixels = [];
       for (var i = 0; i < img.data.length; i += 4) {
-        if (img.data[i] || img.data[i + 1] || img.data[i + 2]) {
+        if (rgbToGreyValue([img.data[i], img.data[i + 1], img.data[i + 2]]) > 200) {
           var pos = to2D(i, width, height);
           if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
             edgePixels.push(i);
@@ -447,9 +459,9 @@ function Filter(type, imgcache) {
         }
         whitePixelsRelative = whitePixels / nonBlackPixels;
 
-        if (whitePixelsRelative < 0.002) {
+        if (whitePixelsRelative < 0.0014) {
           factor *= 1 - correctFactor;
-        } else if (whitePixelsRelative > 0.005) {
+        } else if (whitePixelsRelative > 0.0047) {
           factor *= 1 + correctFactor;
         } else {
           break;
