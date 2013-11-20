@@ -70,7 +70,8 @@ canvasWrapper.addEventListener("mousedown", function(e){
   canvasStartMouseDownPos = relMouseCoords(e, canvas);
   canvasDragFlag = 0;
 }, false);
-canvasWrapper.addEventListener("mousemove", function(){
+canvasWrapper.addEventListener("mousemove", function(e){
+  e.preventDefault();
   canvasDragFlag = 1;
 }, false);
 canvasWrapper.addEventListener("mouseup", function(e){
