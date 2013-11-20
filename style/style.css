@@ -88,3 +88,7 @@ body {
 #originalFilter {
     cursor: pointer;
 }
+
+body.wait, body.wait *{
+    cursor: wait !important;
+}
