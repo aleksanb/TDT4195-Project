@@ -41,10 +41,13 @@
     <button id="getLucky" title="Click here to find objects using edge detection and hough circle transform">Get lucky?</button>
 
     <div id="filters">
-        <span>Original</span>
+        <span id="originalFilter">Original</span>
     </div>
 
-    <canvas width=603 height=316 id="canvas"></canvas>
+    <div id="canvasWrapper">
+        <img id="originalImage">
+        <canvas width=603 height=316 id="canvas"></canvas>
+    </div>
 
     <div id="colors">
     </div>

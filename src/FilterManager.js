@@ -1,7 +1,7 @@
 function FilterManager(formId, ctx) {
   this.DOMfilters = document.getElementById(formId);
   this.filters = [];
-  this.original = document.createElement("img");
+  this.original = document.getElementById("originalImage");
   this.original.src = filePath;
   var that = this;
   this.original.addEventListener("load", function(e) {

@@ -20,11 +20,6 @@ span {
     cursor: pointer;
 }
 
-#canvas {
-    cursor: crosshair;
-    margin-top: 10px;
-}
-
 .clear {
     clear: both;
 }
@@ -71,4 +66,24 @@ div.authors {
 body {
     font-family: norwester, georgia, serif;
     font-size: 18px;
+}
+
+#canvasWrapper {
+    position: relative;
+    margin-top: 10px;
+}
+
+#originalImage {
+    z-index: 1;
+    position: absolute;
+    transition: opacity 1.5s;
+    opacity: 0;
+}
+
+#originalImage.visible {
+    opacity: 1;
+}
+
+#canvas {
+    cursor: crosshair;
 }

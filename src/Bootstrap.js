@@ -147,8 +147,10 @@ function getLucky() {
   }
 
   removeButton.disabled = !fm.filters.length;
-
-  if (confirm("Go 3D now?")) {
-    go3D();
-  }
 }
+
+$('#originalFilter').hover(function() {
+  $("#originalImage").addClass("visible");
+}, function() {
+  $("#originalImage").removeClass("visible");
+});
