@@ -76,29 +76,6 @@ ColorManager.prototype.autoGroupColors = function(colors) {
   var hueThreshold = 6;
   var labThreshold = 6.6;
 
-  /*
-  var hues = [];
-  for (var a = 0; a < 10; a++) {
-    hues.push(0);
-  }
-
-  for (var i = 0; i < colors.length; i++) {
-    var rgb = colors[i];
-    var hsv = RGBtoHSV(rgb);
-    var hue = Math.floor(hsv[0] / 36);
-    hues[hue]++;
-  }
-  */
-
-  /*
-   x = y = 0
-   foreach angle {
-   x += cos(angle)
-   y += sin(angle)
-   }
-   average_angle = atan2(y, x)
-   */
-
   var groups = [];
   for (var i = 0; i < colors.length; i++) {
     var rgb1 = colors[i];

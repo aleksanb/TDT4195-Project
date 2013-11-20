@@ -565,16 +565,32 @@ function Filter(type, imgcache) {
       return cx.getImageData(0, 0, can.width, can.height);
     },
     "Auto group colors": function(img) {
-      var colors = rm.getUniqueColors();
-      cm.autoGroupColors(colors);
-
-      var drawRegions = new Filter("Find objects using LAB", img);
-      img = drawRegions.apply(img);
-
       var drawRegions = new Filter("Find and sanitize regions", img);
       img = drawRegions.apply(img);
 
-      return img;
+      cx.putImageData(img, 0, 0);
+      cx.fillStyle = "black";
+      cx.fillRect(0, 0, width, height);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+
+      var colors = rm.getUniqueColors();
+      cm.autoGroupColors(colors);
+      rm.fitColorsToClosest();
+
+      //redraw regions
+      for (var i = 0; i < rm.regions.length; i++) {
+        var region = rm.regions[i];
+        var rgb = region.rgb;
+        for (var j = 0; j < region.pixels2D.length; j++) {
+          var pos2D = region.pixels2D[j];
+          var pos1D = to1D(pos2D.x, pos2D.y, width);
+          newimg.data[pos1D] = rgb[0];
+          newimg.data[pos1D + 1] = rgb[1];
+          newimg.data[pos1D + 2] = rgb[2];
+        }
+      }
+
+      return newimg;
     }
   }[type];
 }

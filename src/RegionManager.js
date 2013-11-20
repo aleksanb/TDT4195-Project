@@ -66,8 +66,6 @@ RegionManager.prototype.export = function() {
     exports.groups.push(colorObjs[element]);
   }
 
-  //$.jStorage.set('skittles', exports);
-
   return exports;
 }
 
@@ -135,4 +133,29 @@ RegionManager.prototype.getAveragePixelCount = function() {
   }
 
   return this.averagePixelCount;
+}
+
+RegionManager.prototype.fitColorsToClosest = function() {
+  for (var i = 0; i < this.regions.length; i++) {
+    var region = this.regions[i];
+    var rgb = region.rgb;
+    var xyz = RGBtoXYZ(rgb);
+    var lab = XYZtoLAB(xyz);
+    var minDelta = 255;
+    var closestRgb = rgb;
+    for (var j = 0; j < cm.colors.length; j++) {
+      var candidateRgb = cm.colors[j];
+      var candidateXyz = RGBtoXYZ(candidateRgb);
+      var candidateLab = XYZtoLAB(candidateXyz);
+      var delta = deltae94(lab, candidateLab);
+      if (delta < minDelta) {
+        minDelta = delta;
+        closestRgb = candidateRgb;
+      }
+    }
+
+    this.regions[i].rgb = closestRgb;
+  }
+  this.colors.length = 0;
+  this.colorCount = {};
 }
