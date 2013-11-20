@@ -96,6 +96,29 @@ RegionManager.prototype.sanitizeRegions = function() {
       this.regions.push(region);
     }
   }
+
+  //Remove intersecting regions
+  var toBeRemoved = [];
+  for (var i = 0; i < this.regions.length; i++) {
+    var region1 = this.regions[i];
+    var numPixels1 = region1.pixels2D.length;
+    for (var j = i + 1; j < this.regions.length; j++) {
+      var region2 = this.regions[j];
+      var distanceBetweenCenters = euclideanDistance(region1.getCenter2D(), region2.getCenter2D());
+      if (distanceBetweenCenters < (region1.getRadius() + region2.getRadius()) * 0.8) {
+        var numPixels2 = region2.pixels2D.length;
+        var smallest = numPixels1 < numPixels2 ? i : j;
+        toBeRemoved.push(smallest);
+      }
+    }
+  }
+  tempRegions = this.regions;
+  this.regions = [];
+  for (var i = 0; i < tempRegions.length; i++) {
+    if (toBeRemoved.indexOf(i) === -1) {
+      this.regions.push(tempRegions[i]);
+    }
+  }
 }
 
 RegionManager.prototype.getMedianRadius = function() {
