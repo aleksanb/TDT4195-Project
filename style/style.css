@@ -84,3 +84,7 @@ body {
 #originalImage.visible {
     opacity: 0.8;
 }
+
+#originalFilter {
+    cursor: pointer;
+}

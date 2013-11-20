@@ -156,3 +156,9 @@ $('#originalFilter').hover(function() {
 }, function() {
   $("#originalImage").removeClass("visible");
 });
+
+document.getElementById("originalFilter").addEventListener("click", function() {
+  while (fm.filters.length) {
+    fm.pop();
+  }
+});
