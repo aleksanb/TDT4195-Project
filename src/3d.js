@@ -1,70 +1,15 @@
 function setup3DScene() {
   var camera, scene, renderer;
   var shapes;
-  var skittles = {
-    filePath: 'img/sweetsA01.png',
-    height: 316,
-    width: 600,
-    groups: [
-      {
-        color: 12077332,
-        elements: [
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          },
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          }
-        ]
-      },
-      {
-        color: 12077332,
-        elements: [
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          }
-        ]
-      },
-      {
-        color: 12077332,
-        elements: [
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          },
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          }
-        ]
-      },
-      {
-        color: 12077332,
-        elements: [
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          },
-          {
-            y: 316 * Math.random(),
-            x: 600 * Math.random()
-          }
-        ]
-      }
-    ]
-  };
+  var skittles = {};
 
   function init(skittles) {
     renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth - 24, window.innerHeight - 24);
     $('#threedee').append(renderer.domElement);
 
-
     camera = new THREE.PerspectiveCamera(69, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = skittles.height * 1;
+    camera.position.z = skittles.height;
     camera.position.x = skittles.width / 2;
     camera.position.y = skittles.height / 2;
 
