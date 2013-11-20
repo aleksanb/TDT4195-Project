@@ -99,7 +99,7 @@ function setup3DScene() {
     light.position = new THREE.Vector3(0, 100, 400);
     scene.add(light);
 
-    $("body").addClass("threedee");
+    $("body").addClass("threedee").removeClass("wait");
 
     stopAnimation = false;
     animate();

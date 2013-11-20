@@ -10,7 +10,7 @@ ColorManager.prototype.createDOMColorNode = function(rgb) {
   node.id = this.getId(rgb);
   node.innerHTML = humanReadable;
   node.style.backgroundColor = hex;
-  node.title = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
+  node.title = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ") (click to remove)";
 
   var that = this;
   node.addEventListener("click", function(e) {

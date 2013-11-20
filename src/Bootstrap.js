@@ -26,7 +26,8 @@ removeButton.addEventListener("click", function() {
 });
 
 document.getElementById("go3d").addEventListener("click", function() {
-  go3D();
+  $("body").addClass("wait");
+  setTimeout(go3D, 0);
 });
 
 function go3D() {
@@ -80,7 +81,7 @@ originalImage.addEventListener("mouseup", function(e){
     var distance = euclideanDistance(canvasStartMouseDownPos, currentPos);
     if (distance > 4) {
       averageObjectRadius = Math.round(0.5 * distance);
-      $('#averageRadius').html("<span>Average object radius: " + averageObjectRadius + "</span>");
+      $('#averageRadius').html('<span title="Click to remove this manually set radius">Average object radius: ' + averageObjectRadius + "</span>");
     }
   } else {  //click
     var rgb = getColorAt(canvas, currentPos.x, currentPos.y);
