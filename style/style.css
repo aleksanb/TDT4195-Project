@@ -70,7 +70,7 @@ body {
 
 #canvasWrapper {
     position: relative;
-    margin-top: 10px;
+    margin: 10px 0;
 }
 
 #originalImage {
@@ -81,7 +81,7 @@ body {
 }
 
 #originalImage.visible {
-    opacity: 1;
+    opacity: 0.8;
 }
 
 #canvas {

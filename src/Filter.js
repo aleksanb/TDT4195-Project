@@ -315,17 +315,7 @@ function Filter(type, imgcache) {
       grownCtx.fillRect(0, 0, width, height);
       var newimg = grownCtx.getImageData(0, 0, width, height);
 
-      for (var i = 0; i < rm.regions.length; i++) {
-        var region = rm.regions[i];
-        var rgb = region.rgb;
-        for (var j = 0; j < region.pixels2D.length; j++) {
-          var pos2D = region.pixels2D[j];
-          var pos1D = to1D(pos2D.x, pos2D.y, width);
-          newimg.data[pos1D] = rgb[0];
-          newimg.data[pos1D + 1] = rgb[1];
-          newimg.data[pos1D + 2] = rgb[2];
-        }
-      }
+      drawRegions(newimg, width);
 
       return newimg;
     },
@@ -556,18 +546,14 @@ function Filter(type, imgcache) {
         var medianXyz = LABtoXYZ(medianLab);
         var medianRgb = XYZtoRGB(medianXyz);
         rm.regions[i].rgb = medianRgb;
-        cx.fillStyle = rgbToHex(medianRgb);
-        cx.beginPath();
-        cx.arc(center.x, center.y, maxRadius, 0, 2 * Math.PI);
-        cx.fill();
       }
 
-      return cx.getImageData(0, 0, can.width, can.height);
+      var newimg = cx.getImageData(0, 0, can.width, can.height);
+      drawRegions(newimg, width);
+
+      return newimg;
     },
     "Auto group colors": function(img) {
-      var drawRegions = new Filter("Find and sanitize regions", img);
-      img = drawRegions.apply(img);
-
       cx.putImageData(img, 0, 0);
       cx.fillStyle = "black";
       cx.fillRect(0, 0, width, height);
@@ -577,20 +563,24 @@ function Filter(type, imgcache) {
       cm.autoGroupColors(colors);
       rm.fitColorsToClosest();
 
-      //redraw regions
-      for (var i = 0; i < rm.regions.length; i++) {
-        var region = rm.regions[i];
-        var rgb = region.rgb;
-        for (var j = 0; j < region.pixels2D.length; j++) {
-          var pos2D = region.pixels2D[j];
-          var pos1D = to1D(pos2D.x, pos2D.y, width);
-          newimg.data[pos1D] = rgb[0];
-          newimg.data[pos1D + 1] = rgb[1];
-          newimg.data[pos1D + 2] = rgb[2];
-        }
-      }
+      drawRegions(newimg, width);
 
       return newimg;
     }
   }[type];
+}
+
+function drawRegions(img, width) {
+  //redraw regions
+  for (var i = 0; i < rm.regions.length; i++) {
+    var region = rm.regions[i];
+    var rgb = region.rgb;
+    for (var j = 0; j < region.pixels2D.length; j++) {
+      var pos2D = region.pixels2D[j];
+      var pos1D = to1D(pos2D.x, pos2D.y, width);
+      img.data[pos1D] = rgb[0];
+      img.data[pos1D + 1] = rgb[1];
+      img.data[pos1D + 2] = rgb[2];
+    }
+  }
 }
