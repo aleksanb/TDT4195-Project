@@ -89,6 +89,6 @@ body {
     cursor: pointer;
 }
 
-body.wait, body.wait *{
+body.wait, body.wait * {
     cursor: wait !important;
 }
